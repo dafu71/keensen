@@ -1098,7 +1098,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				columns : 12,
-				loadUrl : 'com.keensen.ump.produce.quality.deliveryrecord.expand3.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.quality.deliveryrecord.expand4.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.deliveryrecord.save.biz.ext',
 				fields : [{
 							xtype : 'displayfield',
@@ -1445,7 +1445,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							height : 30,
 							name : 'entity/appearanceCheck',
 							value : '玻璃钢表面光洁平整,无裂纹、凹陷、变形',
-							readOnly : true,
+							//readOnly : true,
 							fieldLabel : '外观检验结果',
 							anchor : '100%',
 							colspan : 3,

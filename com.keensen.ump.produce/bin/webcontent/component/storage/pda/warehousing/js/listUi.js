@@ -74,7 +74,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 								editable : false,
 								store : [['高架成品仓', '高架成品仓'],
 										['高架订单仓', '高架订单仓'],
-										['高架C等品仓', '高架C等品仓']],
+										['高架C等品仓', '高架C等品仓'],['成品元件报废仓', '成品元件报废仓']],
 								listeners : {
 									"expand" : function(A) {
 										this.reset()
@@ -384,7 +384,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							ref : '../storage',
 							fieldLabel : '仓库',
 							store : [['高架成品仓', '高架成品仓'], ['高架订单仓', '高架订单仓'],
-									['高架C等品仓', '高架C等品仓']]
+									['高架C等品仓', '高架C等品仓'],['成品元件报废仓', '成品元件报废仓']]
 
 						}, {
 							xtype : 'textfield',

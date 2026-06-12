@@ -6,6 +6,13 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					data : [['是', '是'], ['否', '否']]
 				});
 
+		// 仓库发货仓，仓库AB仓，仓库C仓
+		this.trendStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['仓库发货仓', '仓库发货仓'], ['仓库AB仓', '仓库AB仓'],
+							['仓库C仓', '仓库C仓']]
+				});
+
 		this.validStore = new Ext.data.ArrayStore({
 					fields : ['mykey', 'myvalue'],
 					data : [['Y', '合格'], ['N', '不合格']]
@@ -322,17 +329,17 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 			}	,
 				fields : [{
 							name : 'zmId'
-						},{
+						}, {
 							name : 'dimoBatchNo'
-						},{
+						}, {
 							name : 'defectAdvise'
-						},{
+						}, {
 							name : 'isAPlus'
 						}, {
 							name : 'aPlusLength'
 						}, {
 							name : 'isReport'
-						},{
+						}, {
 							name : 'gyyRemark'
 						}, {
 							name : 'defectNotearLength'
@@ -406,7 +413,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'perfIsQualifiedName'
 						}, {
 							name : 'judgerName'
-						},{
+						}, {
 							name : 'judgeTime'
 						}]
 			})
@@ -770,8 +777,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							}
 						},
 						emptyText : '--请选择--'
-					},
-					{
+					}, {
 						xtype : 'displayfield',
 						fieldLabel : "<span style='color:red;'>厚度判定</span>",
 						colspan : 4
@@ -903,7 +909,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'orderNo',
-						//name : 'entity/orderNo',
+						// name : 'entity/orderNo',
 						readOnly : true,
 						fieldLabel : '订单号',
 						anchor : '100%',
@@ -989,13 +995,25 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						height : 30,
 						colspan : 2
 					}, {
-						xtype : 'textfield',
-						dataIndex : 'trend',
-						ref : '../trend',
-						name : 'entity/trend',
+						xtype : 'combobox',
+						mode : 'local',
 						fieldLabel : '走向',
+						ref : '../trend',
+						dataIndex : 'trend',
+						hiddenName : 'entity/trend',
 						anchor : '95%',
-						colspan : 2
+						colspan : 2,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.trendStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.trend.reset()
+							}
+						}
+
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -1023,12 +1041,13 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 										.getValue();
 								var qualifidLength = _this.editPanel.qualifidLength
 										.getValue();
-								if(isAPlus == '是'){
-									_this.editPanel.aPlusLength.setValue(qualifidLength);
-								}else{
+								if (isAPlus == '是') {
+									_this.editPanel.aPlusLength
+											.setValue(qualifidLength);
+								} else {
 									_this.editPanel.aPlusLength.setValue(0);
 								}
-								
+
 							}
 						}
 					}, {
@@ -1067,8 +1086,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'textfield',
 						dataIndex : 'gyyRemark',
 						ref : '../gyyRemark',
-						readOnly:true,
-						//name : 'entity/gyyRemark',
+						readOnly : true,
+						// name : 'entity/gyyRemark',
 						fieldLabel : '入C仓膜片<br>工艺意见',
 						anchor : '95%',
 						colspan : 3
@@ -1106,7 +1125,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						text : "确定",
 						scope : this,
 						handler : this.onSave
-					},{
+					}, {
 						text : "驳回",
 						scope : this,
 						handler : this.onReject

@@ -164,7 +164,7 @@ ON qj.juanmo_batch_id = jm.record_id
   on t2.relation_id = t1.id
   left join qinsen.para_mater_spec pms
   on pms.mater_spec_id = t2.prod_spec_id
-  left join (SELECT T.INVALID_CODE,
+  left join (SELECT T.INVALID_CODE,t.id,
        T.JUANMO_BATCH_NO,
        T.RESPONSIBLE,
        T.DEPARTMENT,
@@ -209,6 +209,10 @@ ON qj.juanmo_batch_id = jm.record_id
 	
 	<isNotNull prepend="and" property="code2"> 
 		       T1.CODE = #code2# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="ids"> 
+		       poor.id in ($ids$)
 	</isNotNull>
 	
 	  order by t1.id desc,t2.id

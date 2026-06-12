@@ -1304,7 +1304,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						autoScroll : true,
 						clicksToEdit : 1,
 						baseParams : {
-							'condition/tache' : '卷膜'
+							'condition/tache' : "'卷膜'"
 						},
 						fields : [{
 									name : 'defectId'
@@ -1371,7 +1371,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 								fieldLabel : '四级目录%-%'
 							}, {
 								xtype : 'hidden',
-								value : '卷膜',
+								value : "'卷膜'",
 								ref : '../tache',
 								name : 'condition/tache'
 							}]

@@ -45,13 +45,20 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 					data : [['元件制造部', '元件制造部'], ['膜片制造部', '膜片制造部'],
 							/* ['生产管理部', '生产管理部'], ['财务部-仓库组', '财务部-仓库组'], */
 							['设备能源部', '设备能源部'], ['研发中心-工艺部', '研发中心-工艺部'],
-							['研发中心-研发部', '研发中心-研发部']
+							['研发中心-研发部', '研发中心-研发部'], ['质量管理部', '质量管理部']
 
 					]
 				});
 		this.reasonStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['设备故障', '设备故障'], ['人员操作失误', '人员操作失误']
+
+					]
+				});
+				
+		this.typeDealStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['报废', '报废'], ['返修', '返修'], ['降级', '降级']
 
 					]
 				});
@@ -159,7 +166,7 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【膜片质检标准列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [{
@@ -178,6 +185,7 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 			delUrl : 'com.keensen.ump.produce.quality.defect.deleteHHJmDefectList.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'cdmBatchNo',
+						width:150,
 						header : '裁叠膜栈板号'
 					}, {
 						dataIndex : 'defectName',
@@ -194,6 +202,9 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 						dataIndex : 'length',
 						header : '不良长度'
 					}, {
+						dataIndex : 'numDefect',
+						header : '不良支数'
+					}, {
 						dataIndex : 'numLabel',
 						hidden:true,
 						header : '标签数'
@@ -204,6 +215,9 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 						dataIndex : 'advise',
 						hidden:true,
 						header : '使用意见'
+					}, {
+						dataIndex : 'typeDeal',						
+						header : '处理方式'
 					}, {
 						dataIndex : 'dept',
 						header : '责任部门'
@@ -223,6 +237,10 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'numDefect'
+						},{
+							name : 'typeDeal'
+						}, {
 							name : 'id'
 						}, {
 							name : 'createTime'
@@ -341,6 +359,17 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 							colspan : 1
 						},{
 							xtype : 'textfield',
+							dataIndex : 'numDefect',
+							readOnly : true,
+							fieldLabel : '不良支数',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
 							dataIndex : 'length',
 							readOnly : true,
 							fieldLabel : '不良长度',
@@ -364,6 +393,31 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 							emptyText : '--请选择--',
 							editable : false,
 							store : this.reasonStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						},  {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '处理方式',
+							ref : '../../typeDeal',
+							hiddenName : 'entity/typeDeal',
+							dataIndex : 'typeDeal',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.typeDealStore,
 							displayField : "name",
 							valueField : "code",
 							listeners : {

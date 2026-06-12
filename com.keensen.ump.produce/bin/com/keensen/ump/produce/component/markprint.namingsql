@@ -154,7 +154,11 @@
        T1.TEMPLATE_NAME AS "templateName",
        T1.URL AS "url",
        T1.TEMPLATE_ID AS "templateId",
-       nvl(rec_dry_wet,T1.DRY_WET) AS "dryWet",
+       
+       <!--nvl(rec_dry_wet,T1.DRY_WET) AS "dryWet",-->
+       
+        decode(T1.DRY_WET,'干',decode(rec_dry_wet,null,'干',rec_dry_wet),T1.DRY_WET)  AS "dryWet",
+       
        DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
        nvl(rec_dry_wet,DECODE(T1.JUANMO_BATCH_ID2, NULL, '干', '湿')) AS "dryWet2",
        <!--T1.MATER_SPEC_NAME2 AS "prodSpecName2",-->

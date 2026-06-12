@@ -33,7 +33,7 @@ com.keensen.ump.produce.component.storage.Report4NotOrderMgr = function() {
 								fieldLabel : '仓库',
 								editable : false,
 								store : [['高架成品仓', '高架成品仓'],
-										['高架C等品仓', '高架C等品仓']],
+										['高架C等品仓', '高架C等品仓'],['成品元件报废仓', '成品元件报废仓']],
 								listeners : {
 									"expand" : function(A) {
 										this.reset()

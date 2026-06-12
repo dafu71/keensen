@@ -14,17 +14,18 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
-	this.queryPanel4AbilitionQuery.mon(this.queryPanel4AbilitionQuery, 'query', function(form, vals) {
-		var store = this.listPanel4AbilitionQueryList.store;
-		store.baseParams = vals;
-		store.load({
+	this.queryPanel4AbilitionQuery.mon(this.queryPanel4AbilitionQuery, 'query',
+			function(form, vals) {
+				var store = this.listPanel4AbilitionQueryList.store;
+				store.baseParams = vals;
+				store.load({
 					params : {
 						"pageCond/begin" : 0,
 						"pageCond/length" : this.listPanel4AbilitionQueryList.pagingToolbar.pageSize
 					}
 				});
-	}, this);
-	
+			}, this);
+
 	this.queryPanel4Abilition.mon(this.queryPanel4Abilition, 'query', function(
 			form, vals) {
 		var store = this.listPanel4Abilition.store;
@@ -36,8 +37,6 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 			}
 		});
 	}, this);
-	
-	
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
@@ -89,7 +88,7 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 					var data = ret.data;
 					if (Ext.isEmpty(data) || Ext.isEmpty(data[0])
 							|| data[0].length == null) {
-						Ext.Msg.alert("系统提示", "没有查询到气检记录,请直接录入！")
+						// Ext.Msg.alert("系统提示", "没有查询到记录,请直接录入！")
 					} else {
 
 						var length = data[0].length;
@@ -107,7 +106,15 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 }
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onDel = function() {
-	this.listPanel.onDel();
+
+	var A = this.listPanel;
+	var records = A.getSelectionModel().getSelections();
+	if (records.length > 1) {
+		Ext.Msg.alert("系统提示", "请选择一条数据，不能批量删除！");
+	} else {
+		this.listPanel.onDel();
+	}
+
 };
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function() {
@@ -478,7 +485,7 @@ com.keensen.ump.produce.quality.poorMgr.prototype.exportAbilitionExcel = functio
 }
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onAbolitionQuery = function() {
-	
+
 	this.abilitionQueryWindow.show();
 }
 
@@ -486,7 +493,8 @@ com.keensen.ump.produce.quality.poorMgr.prototype.exportAbilitionQuery = functio
 
 	doQuerySqlAndExport(this, this.queryPanel4AbilitionQuery,
 			this.listPanel4AbilitionQueryList, '报废单明细',
-			'com.keensen.ump.produce.quality.abilition.queryAbilitionList','0,1,2,3,4,5');
+			'com.keensen.ump.produce.quality.abilition.queryAbilitionList',
+			'0,1,2,3,4,5');
 }
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onPrint = function() {
@@ -497,7 +505,33 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onPrint = function() {
 	} else {
 		var C = A.getSelectionModel().getSelections();
 		var code = C[0].data.code;
-		window.open('com.keensen.ump.produce.quality.abilitionReport.flow?code='
+		window.open(
+				'com.keensen.ump.produce.quality.abilitionReport.flow?code='
 						+ code, "top");
+	}
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onPrintBatch = function() {
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		var componentType0 = C[0].get('componentType');
+		for (var i = 0; i < C.length; i++) {
+			var componentType = C[i].get('componentType');
+			if(componentType0 != componentType){
+				Ext.Msg.alert("系统提示", "请选择相同元件归属类型数据！");
+				return;
+			}
+			arr.push(C[i].data.id);
+		}
+		window.open(
+				'com.keensen.ump.produce.quality.abilitionReport2.flow?ids='
+						+ arr.join(','), "top");
+		
+
 	}
 }

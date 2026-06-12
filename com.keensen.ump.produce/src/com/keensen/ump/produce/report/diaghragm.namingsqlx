@@ -404,6 +404,8 @@
                                                 SUM(DECODE(PVA.PVA,
                                                            'PVA-205',
                                                            PVA_WEIGHT,
+                                                           'PVA-205(2%)',
+                                                           PVA_WEIGHT,
                                                            0)) PVA205_WEIGHT,
                                                 SUM(DECODE(PVA.PVA,
                                                            'PVA540',
@@ -422,6 +424,8 @@
                                                                0.01,
                                                                'PVA-205',
                                                                0.01,
+                                                               'PVA-205(2%)',
+                                                               0.02,
                                                                'PVA540',
                                                                0.02,
                                                                '0.01') PVA_WEIGHT,
@@ -431,6 +435,8 @@
                                                                0.01,
                                                                'PVA-205',
                                                                0.02,
+                                                               'PVA-205(2%)',
+                                                               0.005,
                                                                'PVA540',
                                                                0.015,
                                                                '0.01') + LST.C51/1000 C51_WEIGHT,
@@ -1313,6 +1319,8 @@
                                                                0.01,
                                                                'PVA-205',
                                                                0.02,
+                                                               'PVA-205(2%)',
+                                                               0.005,
                                                                'PVA540',
                                                                0.015,
                                                                '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51,
@@ -1350,12 +1358,12 @@
                   LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA205_REALITY,
                                    TM_BATCH_NO
                               FROM (SELECT LST.TM_BATCH_NO,
-                                           LST.USED * 0.01 PVA_WEIGHT
+                                           LST.USED * decode(H.PVA,'PVA-205',0.01,0.02) PVA_WEIGHT
                                       FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
                                       LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
                                         ON H.ID = LST.RELATION_ID
                                      WHERE LST.TM_BATCH_NO IS NOT NULL
-                                       AND H.PVA = 'PVA-205')
+                                       AND H.PVA in('PVA-205','PVA-205(2%)'))
                              GROUP BY TM_BATCH_NO
                             
                             ) PVA205
@@ -1792,6 +1800,8 @@
                                                                0.01,
                                                                'PVA-205',
                                                                0.02,
+                                                               'PVA-205(2%)',
+                                                               0.005,
                                                                'PVA540',
                                                                0.015,
                                                                '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51, nvl(T.C14,0)/1000 C14,
@@ -1827,12 +1837,12 @@
                   LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA205_REALITY,
                                    TM_BATCH_NO
                               FROM (SELECT LST.TM_BATCH_NO,
-                                           LST.USED * 0.01 PVA_WEIGHT
+                                           LST.USED * decode(H.PVA,'PVA-205',0.01,0.02) PVA_WEIGHT
                                       FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
                                       LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
                                         ON H.ID = LST.RELATION_ID
                                      WHERE LST.TM_BATCH_NO IS NOT NULL
-                                       AND H.PVA = 'PVA-205')
+                                       AND H.PVA in('PVA-205','PVA-205(2%)'))
                              GROUP BY TM_BATCH_NO
                             
                             ) PVA205
@@ -2207,7 +2217,7 @@ SELECT 2 MYORDER,
   FROM (SELECT SUM(TM.OUT_LENGTH) OUT_LENGTH, TM.TEAM_ID
           FROM QINSEN.INST_TUMO TM
           LEFT JOIN qinsen.para_mater_spec pms
-                         ON pms.mater_spec_id = tm.spec_id
+                         ON pms.mater_spec_id = nvl(tm.spec_id_original,tm.spec_id)
                        LEFT JOIN qinsen.para_mater_class pmc
                          ON pms.mater_class_id = pmc.mater_class_id
          WHERE 1 = 1 and tm.prod_flag_id = 300027
@@ -2223,7 +2233,7 @@ SELECT 2 MYORDER,
            AND tm.line_id = #lineId#
           </isNotNull>
           <isNotNull prepend="" property="specId">
-           AND tm.spec_id = #specId#
+           AND nvl(tm.spec_id_original,tm.spec_id) = #specId#
           </isNotNull>
           
            <isNotNull prepend="" property="prodFlagId">
@@ -2237,7 +2247,7 @@ SELECT 2 MYORDER,
   LEFT JOIN (SELECT TEAM_ID, SUM(A_PLUS_LENGTH) A_PLUS_LENGTH
                FROM (SELECT TM.RECORD_ID,
                             TM.BATCH_NO,
-                            TM.SPEC_ID,
+                            nvl(tm.spec_id_original,tm.spec_id) spec_id,
                             TM.TEAM_ID,
                             TM.PRODUCE_DT,
                             T33.IS_A_PLUS,
@@ -2248,7 +2258,7 @@ SELECT 2 MYORDER,
                        LEFT JOIN QINSEN.INST_TUMO TM
                          ON TM.RECORD_ID = T33.RECORD_ID
                        LEFT JOIN qinsen.para_mater_spec pms
-                         ON pms.mater_spec_id = tm.spec_id
+                         ON pms.mater_spec_id = nvl(tm.spec_id_original,tm.spec_id)
                        LEFT JOIN qinsen.para_mater_class pmc
                          ON pms.mater_class_id = pmc.mater_class_id
                       WHERE T33.IS_A_PLUS = '是' and tm.prod_flag_id = 300027
@@ -2264,7 +2274,7 @@ SELECT 2 MYORDER,
            AND tm.line_id = #lineId#
           </isNotNull>
           <isNotNull prepend="" property="specId">
-           AND tm.spec_id = #specId#
+           AND nvl(tm.spec_id_original,tm.spec_id) = #specId#
           </isNotNull>
            <isNotNull prepend="" property="prodFlagId">
            AND tm.prod_flag_id = #prodFlagId#
@@ -2287,7 +2297,7 @@ SELECT 2 MYORDER,
   FROM (SELECT SUM(TM.OUT_LENGTH) OUT_LENGTH,  200000 TEAM_ID
           FROM QINSEN.INST_TUMO TM
           LEFT JOIN qinsen.para_mater_spec pms
-                         ON pms.mater_spec_id = tm.spec_id
+                         ON pms.mater_spec_id = nvl(tm.spec_id_original,tm.spec_id)
                        LEFT JOIN qinsen.para_mater_class pmc
                          ON pms.mater_class_id = pmc.mater_class_id
          WHERE 1 = 1
@@ -2303,7 +2313,7 @@ SELECT 2 MYORDER,
            AND tm.line_id = #lineId#
           </isNotNull>
           <isNotNull prepend="" property="specId">
-           AND tm.spec_id = #specId#
+           AND nvl(tm.spec_id_original,tm.spec_id) = #specId#
           </isNotNull>
            <isNotNull prepend="" property="prodFlagId">
            AND tm.prod_flag_id = #prodFlagId#
@@ -2315,7 +2325,7 @@ SELECT 2 MYORDER,
   LEFT JOIN (SELECT 200000 TEAM_ID, SUM(A_PLUS_LENGTH) A_PLUS_LENGTH
                FROM (SELECT TM.RECORD_ID,
                             TM.BATCH_NO,
-                            TM.SPEC_ID,
+                            nvl(tm.spec_id_original,tm.spec_id) spec_id,
                             TM.TEAM_ID,
                             TM.PRODUCE_DT,
                             T33.IS_A_PLUS,
@@ -2326,7 +2336,7 @@ SELECT 2 MYORDER,
                        LEFT JOIN QINSEN.INST_TUMO TM
                          ON TM.RECORD_ID = T33.RECORD_ID
                        LEFT JOIN qinsen.para_mater_spec pms
-                         ON pms.mater_spec_id = tm.spec_id
+                         ON pms.mater_spec_id = nvl(tm.spec_id_original,tm.spec_id)
                        LEFT JOIN qinsen.para_mater_class pmc
                          ON pms.mater_class_id = pmc.mater_class_id
                       WHERE T33.IS_A_PLUS = '是'
@@ -2342,7 +2352,7 @@ SELECT 2 MYORDER,
            AND tm.line_id = #lineId#
           </isNotNull>
           <isNotNull prepend="" property="specId">
-           AND tm.spec_id = #specId#
+           AND nvl(tm.spec_id_original,tm.spec_id) = #specId#
           </isNotNull>
            <isNotNull prepend="" property="prodFlagId">
            AND tm.prod_flag_id = #prodFlagId#

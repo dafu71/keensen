@@ -64,11 +64,19 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 					fields : ['code', 'name'],
 					data : [
 							['气检NG水测不合格', '气检NG水测不合格'],
-							['气检NG补胶后端面胶水不良', '气检NG补胶后端面胶水不良'],
-							['端面不良(膜片打折、浓网打折、淡网打折、端面不齐)',
-									'端面不良(膜片打折、浓网打折、淡网打折、端面不齐)'],
-							['中心管不良', '中心管不良'], ['膜体长度短', '膜体长度短'],
-							['湿膜正常入库', '湿膜正常入库']]
+							['后端面胶水不良', '补胶后端面胶水'],
+							['端面不良(膜片打折)',
+									'端面不良(膜片打折)'],
+							['端面不良(浓网打折)',
+									'端面不良(浓网打折)'],
+							['端面不良(淡网打折)',
+									'端面不良(淡网打折)'],
+							['端面不良(端面不平)',
+									'端面不良(端面不平)'],
+							['中心管不良(来料)', '中心管不良(来料)'],
+							['中心管不良(制程)', '中心管不良(制程)'],
+							['膜体长度异常', '膜体长度异常'],
+							['湿膜入库', '湿膜入库']]
 				});
 
 		this.dryWetStore = new Ext.data.SimpleStore({
@@ -351,7 +359,12 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 				autoHide : false,
 				successFn : function() {
 					_this.listPanel.store.load();
-					_this.inputWindow.items.items[0].form.reset();
+					//_this.inputWindow.items.items[0].form.reset();
+					Ext.getCmp(amountId).setValue('');
+					_this.inputWindow.blankingSize.setValue('');
+					_this.inputWindow.describe.setValue('');
+					
+					
 				},
 				pgrid : this.listPanel,
 				columns : 2,
@@ -973,8 +986,10 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 
 							}]
 				});
+				
 		this.copyWindow = this.copyWindow || new Ext.fn.FormWindow({
 			title : '复制新增',
+			iconCls:'icon-page_copy',
 			height : 600,
 			width : 800,
 			resizable : false,

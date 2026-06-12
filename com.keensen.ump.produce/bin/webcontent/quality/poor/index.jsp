@@ -19,7 +19,7 @@
   - Description:
 -->
 <head>
-<title>元件不良记录</title>
+<title>元件报废记录</title>
 
 <!-- 导出Excel -->
 <script src="base/exceljs/polyfill.js"></script>

@@ -23,7 +23,7 @@ Frame.ui.LoginWindow = Ext.extend(Ext.Window, {
 	hasvcode:true,
 	remoteIP:"",
 	redirect:true,
-	layout : "fit",
+	layout : "fit",	
 	modal : true,
 	iconCls : "icon-lock_key",
 	initComponent : function() {

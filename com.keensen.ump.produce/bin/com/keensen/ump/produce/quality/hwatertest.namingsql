@@ -48,9 +48,15 @@
 		pms.mater_spec_name "testSpecName",
 		test.prop_value_name "testTypeName",
 		t1.CM_BATCH_NO      "cmBatchNo"
+		
+		,nvl(cm.num_per_wad,PMS.Num_Per_Wad) "numPerWad"
+		,cm.page_width "pageWidth"       
+       ,cm.blanking_size "blankingSize"
+		
   FROM KS_QUALITY_HH_WATER_TEST T1
   LEFT JOIN qinsen.para_mater_spec pms
 ON pms.mater_spec_id = t1.test_spec_id
+LEFT JOIN qinsen.inst_caidiemo cm ON t1.cm_batch_no=cm.batch_no
   left join (select t.prop_value_id,t.prop_value_name from QINSEN.CONF_PROP_VALUE_OPTION t
  WHERE t.prop_id=30042) test
  on test.prop_value_id = t1.test_Type_Id

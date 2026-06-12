@@ -414,6 +414,7 @@ SELECT '8寸',
        NVL(JMCNT.JMCOUNT, 0) "jmCount",
        NVL(QJCNT.QJCOUNT, 0) "qjCount",
        NVL(QJCNT.LABELCOUNT, 0) "labelCount",
+       NVL(QJCNT.is_qualified_count,0) "isQualifiedCount",
        NVL(CNT.RSCOUNT, 0) "rsCount",
        ROUND(100 * NVL(JMCNT.JMCOUNT, 0) /
              NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
@@ -446,7 +447,8 @@ SELECT '8寸',
                            1
                           ELSE
                            0
-                        END) LABELCOUNT
+                        END) LABELCOUNT,
+                    SUM(CASE WHEN qj.is_qualified = 'Y' THEN 1 ELSE 0 END) is_qualified_count
                FROM QINSEN.INST_QIJIAN QJ
               GROUP BY ORDER_NO, PROD_SPEC_ID) QJCNT
     ON QJCNT.ORDER_NO = T1.ORDER_NO
@@ -928,13 +930,13 @@ SELECT '8寸',
                       GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) CDM
             ON CDM.YEAR_MONTH = T1.YEAR_MONTH
           LEFT JOIN (SELECT SUM(T.LENGTH) AMOUNT,
-                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                            TO_CHAR(T.Invalid_Dt, 'YYYY-MM') YEAR_MONTH
                        FROM KS_PROD_QUALITY_POORRECORD T
                       WHERE (TRIM(T.DEPARTMENT) = '膜片制造部' OR
                             TRIM(T.DEPARTMENT) = '膜片制造')
-                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
-                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
-                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) PROD
+                        AND TO_CHAR(T.Invalid_Dt, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.Invalid_Dt, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.Invalid_Dt, 'YYYY-MM')) PROD
             ON PROD.YEAR_MONTH = T1.YEAR_MONTH
           LEFT JOIN (SELECT SUM(AMOUNT) AMOUNT,
                             TO_CHAR(CLC.CREATE_TIME, 'YYYY-MM') YEAR_MONTH

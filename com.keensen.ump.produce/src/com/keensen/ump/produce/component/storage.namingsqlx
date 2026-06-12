@@ -1318,4 +1318,67 @@ ON alct.ORDER_NO = TT.ORDER_NO
 	 
 	 
 	</select> 
+	
+	
+	 <!--非订单仓库元件库存报表（增加标签型号）-->
+    <select id="queryReport4NotOrder2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    
+	 SELECT COUNT(1) "amount",
+       JM_SPEC_NAME "jmSpecName",SPEC_NAME_LABEL "specNameLabel",
+       STORAGE "storage",
+       DRY_WET "dryWet"
+  FROM (SELECT T.JM_SPEC_NAME, nvl(T.DRY_WET,T.DRY_WET2) dry_wet, T.STORAGE
+  ,t.SPEC_NAME_LABEL
+          FROM V_KS_COMPONENT_REPORT_STOCK T
+         WHERE T.STORAGE != '高架订单仓'
+         <isNotNull prepend="and" property="jmSpecName"> 
+		       t.JM_SPEC_NAME = #jmSpecName# 
+	</isNotNull>
+	
+	
+	 <isNotNull prepend="and" property="specNameLabel"> 
+		       t.SPEC_NAME_LABEL = #specNameLabel# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="dryWet"> 
+		       <!--nvl(T.DRY_WET,T.DRY_WET2) = #dryWet# -->
+		      nvl(T.DRY_WET,T.DRY_WET2) like '%' || #dryWet# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="storage"> 
+		       t.storage = #storage# 
+	</isNotNull>)
+ GROUP BY JM_SPEC_NAME,SPEC_NAME_LABEL, STORAGE, DRY_WET
+ 
+	 
+    </select>
+    
+    <select id="countReport4NotOrder2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    
+    SELECT COUNT(1) "stockAmount"
+  FROM (SELECT T.JM_SPEC_NAME, nvl(T.DRY_WET,T.DRY_WET2) dry_wet, T.STORAGE
+          FROM V_KS_COMPONENT_REPORT_STOCK T
+         WHERE T.STORAGE != '高架订单仓'
+         <isNotNull prepend="and" property="jmSpecName"> 
+		       t.JM_SPEC_NAME = #jmSpecName# 
+	</isNotNull>
+	<isNotNull prepend="and" property="dryWet"> 
+		       nvl(T.DRY_WET,T.DRY_WET2) = #dryWet# 
+	</isNotNull>
+	<isNotNull prepend="and" property="storage"> 
+		       t.storage = #storage# 
+	</isNotNull>
+	
+	 <isNotNull prepend="and" property="specNameLabel"> 
+		       t.SPEC_NAME_LABEL = #specNameLabel# 
+	</isNotNull>
+	
+	)
+	
+	
+	 
+    </select>
+	
+	
+	
+	
 </sqlMap>

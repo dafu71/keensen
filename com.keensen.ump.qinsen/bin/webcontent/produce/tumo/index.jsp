@@ -49,6 +49,13 @@
         cursor: pointer;
     }
 
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    .x-grid3-cell, /* Normal grid cell */
+    .x-grid3-gcell /* Grouped grid cell (esp. in head)*/
+    {
+        box-sizing: border-box;
+    }
+}
 </style>
 
 <script type="text/javascript">

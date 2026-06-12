@@ -254,15 +254,22 @@ and nvl(t1.status,1) != 0
        V.OPERATORNAME AS "userName",
        V.USERID AS "userId",
        PMS.MATER_SPEC_NAME AS "prodSpecName",
-       PMS.Num_Per_Wad "numPerWad",pms.dense_net "denseNet",
+       nvl(tm.num_per_wad,PMS.Num_Per_Wad) "numPerWad",pms.dense_net "denseNet",
        m.name "machineName",
        tm.tm_batch_no "tmBatchNo"
        ,tmdefect.defect_length "defectLength"
+       
+       ,tm.page_width "pageWidth"       
+       ,tm.blanking_size "blankingSize"
+       
+       
+       
   FROM KS_COMPONENT_HOUSEHOLD_JM T1
   
   left join (select sum(length) defect_length,relation_id from KS_COMPONENT_HHJM_DEFECT_LIST group by relation_id) tmdefect
   					on tmdefect.relation_id = t1.id
-  left join (SELECT cm.batch_no cm_batch_no,tm.batch_no tm_batch_no from qinsen.inst_caidiemo cm
+  left join (SELECT cm.batch_no cm_batch_no,tm.batch_no tm_batch_no
+  ,cm.page_width,cm.num_per_wad,cm.blanking_size from qinsen.inst_caidiemo cm
 	LEFT JOIN qinsen.inst_tumo tm
 	on cm.tumo_batch_id=tm.record_id) tm
 	on tm.cm_batch_no = t1.CM_BATCH_NO

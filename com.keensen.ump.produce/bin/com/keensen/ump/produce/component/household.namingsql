@@ -50,4 +50,53 @@
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
      order by t1.id desc
     </select>
+    <select id="queryMarkPrint" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.order_id as "orderId",
+		t1.check_id as "checkId",
+		t1.order_No as "orderNo",
+		t1.prod_Spec_Name as "prodSpecName",
+		t1.tap_Color as "tapColor",
+		t1.order_Amount as "orderAmount",
+		t1.apply_Amount as "applyAmount",
+		t1.quantity_Box as "quantityBox",
+		t1.ifnsf as "ifnsf",
+		t1.dry_Wet as "dryWet",
+		t1.Batch_No as "batchNo",
+		t1.iflog as "iflog",
+		h.code "checkCode",
+		decode(nvl(t1.ifnsf,'N'),'Y','是','否') "ifnsfName",
+        decode(nvl(t1.iflog,'N'),'Y','是','否') "iflogName"
+       
+  FROM KS_COMPONENT_HH_MARK_PRINT T1
+  LEFT JOIN KS_COMPONENT_HH_CHECK_HEAD h
+  ON t1.check_id = h.id
+  where 1=1
+  
+  <isEqual compareValue="choose" prepend="" property="opt">AND t1.check_id is null</isEqual>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t1.prod_Spec_Name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.Batch_No like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="code">h.code like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">t1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+     order by t1.id desc
+    </select>
+    <update id="updateMarkPrint" parameterClass="java.util.HashMap">update KS_COMPONENT_HH_MARK_PRINT
+    set check_id = #checkId#
+    where id in($markPrintIds$) and check_id is null</update>
 </sqlMap>

@@ -11,10 +11,11 @@
 			pageContext);
 			
 	String boardDate = (String)XpathUtil.getObjectByXpath(rootObj,"boardDate");		
-	String title = boardDate + "销售订单生产进度看板";
+	
 	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
 			"list");
-	
+	int length = list.length;
+	String title = boardDate + "销售订单生产进度看板(共" + length + "条)";
 	String uid = userObject.getUserId();
 	double speed = uid.indexOf("public")>-1?1:0.3;
 	

@@ -47,10 +47,21 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
                          'yyyy-mm-dd hh24:mi:ss') -
                  TO_DATE(TO_CHAR(RS.PRODUCE_DT, 'yyyy-mm-dd hh24:mi:ss'),
                          'yyyy-mm-dd hh24:mi:ss')) diff
-
+,chklst.is_c, clc.create_time check_time
 
   FROM QINSEN.INST_QIJIAN QJ
   
+  left join V_KS_CHECK_LIST_CURRENT clc
+  on clc.batch_no = qj.batch_no
+  
+  left join (SELECT MAX(is_c) is_c,batch_no
+	FROM(
+	select t.batch_no,h.is_c from KS_COMPONENT_CHECK_LIST t
+	LEFT JOIN KS_COMPONENT_CHECK_HEAD h
+	ON t.relation_id = h.id
+	) GROUP BY batch_no) chklst
+	on chklst.batch_no = qj.batch_no
+	
   LEFT JOIN qinsen.para_mater_spec pms3
   ON pms3.mater_spec_id=qj.prod_spec_id
   
@@ -73,6 +84,19 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
 	   
+	    <isNotNull prepend = ""  property = "checkTimeStart">
+	   AND to_char(A.check_time, 'YYYY-MM-DD') &gt;= #checkTimeStart#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "checkTimeEnd">
+	   AND to_char(A.check_time, 'YYYY-MM-DD') &lt;= #checkTimeEnd#
+	</isNotNull>
+	
+	<isEqual prepend="" property="isC" compareValue="是"> 	  
+	   AND A.is_c = '是'
+	</isEqual>
+	 <isEqual prepend="" property="isC" compareValue="否"> 	  
+	   AND A.is_c = '否'
+	</isEqual>
 	   
 	   <isNotNull prepend="and" property="jmBatchNoStr2"> 
 		       J.batch_No in ($jmBatchNoStr2$)
@@ -453,7 +477,12 @@ z.time_degrade as "timeDegrade"
 	       
 	       
 	  FROM (SELECT pms3.page_width page_width3,QJ.*,chk.batch_no check_batch_no, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
-      nvl(rec.dry_wet,CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END) DRY_WET, rw.batch_no rw_batch_no,
+	  
+      <!-- nvl(CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END,rec.dry_wet) DRY_WET, -->
+      
+       CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN  DECODE(rec.dry_wet,null,'干', rec.dry_wet )  ELSE  '湿' END  as  DRY_WET,
+      
+      rw.batch_no rw_batch_no,
 
 TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
                                      SYSDATE - 10000),

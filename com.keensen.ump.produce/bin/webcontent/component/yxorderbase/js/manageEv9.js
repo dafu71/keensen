@@ -72,6 +72,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 		var state = cell.data.state;
 		var hpmc = cell.data.hpmc;
+		hpmc = hpmc.trim();
 		var version = cell.data.version;
 		var orderType = cell.data.orderType;
 
@@ -214,7 +215,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						this.addOrderWindow.deliveryDateLatest
 								.setReadOnly(true);
 						this.addOrderWindow.tray.setReadOnly(true);
-						this.addOrderWindow.packingTxt.setReadOnly(true);
+						// this.addOrderWindow.packingTxt.setReadOnly(true);
 						this.addOrderWindow.markPaste.setReadOnly(true);
 						// this.addOrderWindow.pallet.setReadOnly(true);
 
@@ -668,6 +669,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 特规:CRM??????，共计9位。
 				// B202？？？？？-？？？
 
+				// 订单编号规则如下:
+				// 常规: 20241225-14???,共14位
+				// 常规2: 20241225-14???-?,共16位
+				// 展品: 展品-CRM??????，共12位
+				// 展品: 展品-CRM??????-?，共14位
+				// 样品: MF-年年月月日日-XXXXXX
+				// 生管: SGAQ????????-???，共16位
+
 				var regex = /^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
 				var regex = /^\d{8}-\d{5}-\d{1}$/;
@@ -695,15 +704,35 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 即整个订单号为F20251212-？？？（共13位，类似于备货订单号规则）
 				var regex = /^F\d{8}-\d{3}$/;
 				var returnFactory = regex.test(orderNo);
-				
-				//生管订单
-				//生管：SGAQ????????-???，共16位
+
+				// 生管订单
+				// 生管：SGAQ????????-???，共16位
 				var regex = /^\SGAQ\d{8}-\d{3}$/;
 				var returnSG = regex.test(orderNo);
 
-				if (!convention && !convention2 && !sample && !exhibit
-						&& !exhibit2 && !exhibit3 && !exhibit4 && !special
-						&& !special2 && !aftersale && !returnFactory && !returnSG) {
+				// 生管：SG??????，共8位
+				var regex = /^\SG\d{8}$/;
+				var returnSG2 = regex.test(orderNo);
+
+				// 生管：SG????????-???，共14位
+				var regex = /^\SG\d{8}-\d{3}$/;
+				var returnSG3 = regex.test(orderNo);
+
+				// 生管：SGKF????????-???，共16位
+				var regex = /^\SGKF\d{8}-\d{3}$/;
+				var returnSG4 = regex.test(orderNo);
+
+				/*
+				 * if (!convention && !convention2 && !sample && !exhibit &&
+				 * !exhibit2 && !exhibit3 && !exhibit4 && !special && !special2 &&
+				 * !aftersale && !returnFactory && !returnSG && !returnSG2 &&
+				 * !returnSG3 && !returnSG4) { Ext.Msg.alert('系统提示',
+				 * '订单编号不符合要求，请重新输入'); return false; }
+				 */
+
+				if (!convention && !convention2 && !exhibit && !exhibit2
+						&& !exhibit4 && !returnSG && !returnSG2 && !returnSG3
+						&& !returnSG4) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
@@ -1155,16 +1184,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
-	
+
 	var _this = this;
-	
-	var prodAmount = this.addOrderWindow.prodAmount
-			.getValue();
-	
-	//需生产数为0时，可以不需要上传“询期回复截图” 2026-2-11
+
+	var prodAmount = this.addOrderWindow.prodAmount.getValue();
+
+	// 需生产数为0时，可以不需要上传“询期回复截图” 2026-2-11
 
 	var urlDateDelivery = Ext.getCmp(urlDateDeliveryId).getValue();
-	if (urlDateDelivery == '请上传图片' && prodAmount>0) {
+	if (urlDateDelivery == '请上传图片' && prodAmount > 0) {
 		Ext.Msg.alert('系统提示', '请上传询期回复截图');
 		return false;
 	}
@@ -1498,7 +1526,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMCConfirm = functio
 }
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = function() {
 	// KS00307 KS01147
-	if (uid == 'KS00307' || uid == 'KS01147' || uid == 'dafu' || uid == 'KS01479') {
+	if (uid == 'KS00307' || uid == 'KS01147' || uid == 'dafu'
+			|| uid == 'KS01479') {
 		doQuerySqlAndExport(
 				this,
 				this.queryPanel,
@@ -1507,11 +1536,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
 				'0,1');
 	} else {
-		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '计划入库时间', '发货日期', '订单下达型号','卷膜型号',
-				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存膜元件（支）',
-				'产品备注', '标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
-				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
-				'导入操作员', '订单类型','元件制造部入库时间','已生产入库总数量','需生产入库数量']
+		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '计划入库时间', '发货日期',
+				'订单下达型号', '卷膜型号', '货品名称', '干/湿', '订单数量', '发库存干膜数量（支）',
+				'发库存湿膜数量（支）', '发库存膜元件（支）', '产品备注', '标签', '标签制作方式', '标签内部图纸编号',
+				'唛头', '唛头内部图纸编号', '包装箱', '包装箱内部图纸编号', '是否新制版', '序列开始号',
+				'序列结束号', '负责人', '产品型号', '备注', '导入操作员', '订单类型', '元件制造部入库时间',
+				'已生产入库总数量', '需生产入库数量']
 
 		doQuerySqlAndExportExt(
 				this,
@@ -2237,19 +2267,35 @@ function getDayDiff(start, end) {
 }
 
 function describeOrderNo() {
+//	var s = '订单编号规则如下:<br>'
+//	s += '常规: 20241225-14???,共14位<br>';
+//	s += '常规2: 20241225-14???-?,共16位<br>';
+//	s += '样品: 样品-CRM??????，共12位<br>';
+//	s += '展品: 展品-CRM??????，共12位<br>';
+//	s += '展品: 展品-CRM??????-?，共14位<br>';
+//	s += '展品: 展品-CRM??????-??，共15位<br>';
+//	s += '特规: CRM??????，共9位<br>';
+//	s += '特规2: B202?????-???，共13位<br>'
+//	s += '免费样品: MF-年年月月日日-XXXXXX<br>'
+//	s += '售后: 售后-CRM??????，共12位<br>';
+//	s += '返厂: F202?????-???，共13位<br>';
+//	s += '生管: SGAQ????????-???，共16位<br>';
+//	s += '生管： SG??????，共8位<br>';
+//	s += '生管： SG????????-???，共14位<br>';
+//	s += '生管： SGKF????????-???，共16位';
+	
+	
 	var s = '订单编号规则如下:<br>'
 	s += '常规: 20241225-14???,共14位<br>';
 	s += '常规2: 20241225-14???-?,共16位<br>';
-	s += '样品: 样品-CRM??????，共12位<br>';
 	s += '展品: 展品-CRM??????，共12位<br>';
-	s += '展品: 展品-CRM??????-?，共14位<br>';
-	s += '展品: 展品-CRM??????-??，共15位<br>';
-	s += '特规: CRM??????，共9位<br>';
-	s += '特规2: B202?????-???，共13位<br>'
-	s += '免费样品: MF-年年月月日日-XXXXXX<br>'
-	s += '售后: 售后-CRM??????，共12位<br>';
-	s += '返厂: F202?????-???，共13位<br>'
-	s += '生管: SGAQ????????-???，共16位'
+	s += '展品: 展品-CRM??????-?，共14位<br>';	 
+	s += '样品: MF-年年月月日日-XXXXXX<br>'
+	s += '生管: SGAQ????????-???，共16位<br>';
+	s += '生管： SG??????，共8位<br>';
+	s += '生管： SG????????-???，共14位<br>';
+	s += '生管： SGKF????????-???，共16位';
+
 	Ext.Msg.alert("订单编号规则", s);
 }
 
@@ -2577,6 +2623,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.checkOrderNo = functi
 	// 特规:CRM??????，共计9位。
 	// B202？？？？？-？？？
 
+	// 订单编号规则如下:
+	// 常规: 20241225-14???,共14位
+	// 常规2: 20241225-14???-?,共16位
+	// 展品: 展品-CRM??????，共12位
+	// 展品: 展品-CRM??????-?，共14位
+	// 样品: MF-年年月月日日-XXXXXX
+	// 生管: SGAQ????????-???，共16位
+
 	var regex = /^\d{8}-\d{5}$/;
 	var convention = regex.test(orderNo);
 	var regex = /^\d{8}-\d{5}-\d{1}$/;
@@ -2605,19 +2659,37 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.checkOrderNo = functi
 	// 即整个订单号为F20251212-？？？（共13位，类似于备货订单号规则）
 	var regex = /^F\d{8}-\d{3}$/;
 	var returnFactory = regex.test(orderNo);
-	
-	//生管订单
-	//生管：SGAQ????????-???，共16位
+
+	// 生管订单
+	// 生管：SGAQ????????-???，共16位
 	var regex = /^\SGAQ\d{8}-\d{3}$/;
 	var returnSG = regex.test(orderNo);
-	
 
-	if (!convention && !convention2 && !sample && !exhibit && !exhibit2
-			&& !exhibit3 && !exhibit4 && !special && !special2 && !aftersale
-			&& !returnFactory && !returnSG) {
+	// 生管：SG??????，共8位
+	var regex = /^\SG\d{8}$/;
+	var returnSG2 = regex.test(orderNo);
+
+	// 生管：SG????????-???，共14位
+	var regex = /^\SG\d{8}-\d{3}$/;
+	var returnSG3 = regex.test(orderNo);
+
+	// 生管：SGKF????????-???，共16位
+	var regex = /^\SGKF\d{8}-\d{3}$/;
+	var returnSG4 = regex.test(orderNo);
+
+	/*
+	 * if (!convention && !convention2 && !sample && !exhibit && !exhibit2 &&
+	 * !exhibit3 && !exhibit4 && !special && !special2 && !aftersale &&
+	 * !returnFactory && !returnSG) { Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
+	 * return false; }
+	 */
+
+	if (!convention && !convention2 && !exhibit && !exhibit2 && !exhibit4
+			&& !returnSG && !returnSG2 && !returnSG3 && !returnSG4) {
 		Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 		return false;
 	}
+
 	return true;
 }
 
@@ -2791,8 +2863,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onModifyUrlPicture = 
 		field) {
 
 	this.pictureUploadWin.getComponent('uploadForm').form.reset();
-	this.pictureUploadWin.baseId
-			.setValue(this.orderViewWindow.baseId.getValue());
+	this.pictureUploadWin.baseId.setValue(this.orderViewWindow.baseId
+			.getValue());
 	this.pictureUploadWin.field.setValue(field);
 	this.pictureUploadWin.show();
 }
@@ -2838,7 +2910,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPicture = fun
 						if (result.success) {
 							_this.pictureUploadWin.hide();
 							var cell = new Ext.data.Record({
-										id : _this.pictureUploadWin.baseId.getValue()
+										id : _this.pictureUploadWin.baseId
+												.getValue()
 									})
 							_this.orderViewWindow.loadData(cell);
 
@@ -2858,8 +2931,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPicture = fun
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMarketingBoard = function() {
-	window
-			.open('com.keensen.ump.produce.report.queryMarketingBoard.flow');
+	window.open('com.keensen.ump.produce.report.queryMarketingBoard.flow');
 }
 
 // 拍照查看
@@ -2880,11 +2952,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	if (!Ext.isEmpty(urlPhotoApply)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply;
 		html += '<img class="cursor-example" src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
-				+ ' title="单击显示大图" onclick="showImageModal(\''
-				+ url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"'
+				+ ' title="单击显示大图" onclick="showImageModal(\'' + url
 				+ '\',820 ,650)"'
-				'/>';
+		'/>';
 	} else {
 		html += url;
 	}
@@ -2894,11 +2965,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	if (!Ext.isEmpty(urlPhotoApply2)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
 		html += '<img class="cursor-example" src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
-				+ ' title="单击显示大图" onclick="showImageModal(\''
-				+ url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"'
+				+ ' title="单击显示大图" onclick="showImageModal(\'' + url
 				+ '\',820 ,650)"'
-				'/>';
+		'/>';
 	} else {
 		html += url;
 	}
@@ -2908,11 +2978,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	if (!Ext.isEmpty(urlPhotoApply3)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply3;
 		html += '<img class="cursor-example" src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
-				+ ' title="单击显示大图" onclick="showImageModal(\''
-				+ url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"'
+				+ ' title="单击显示大图" onclick="showImageModal(\'' + url
 				+ '\',820 ,650)"'
-				'/>';
+		'/>';
 	} else {
 		html += url;
 	}
@@ -2923,11 +2992,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	if (!Ext.isEmpty(urlPhotoApply4)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply4;
 		html += '<img class="cursor-example" src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
-				+ ' title="单击显示大图" onclick="showImageModal(\''
-				+ url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"'
+				+ ' title="单击显示大图" onclick="showImageModal(\'' + url
 				+ '\',820 ,650)"'
-				'/>';
+		'/>';
 	} else {
 		html += url;
 	}
@@ -2937,11 +3005,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	if (!Ext.isEmpty(urlPhotoApply5)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply5;
 		html += '<img class="cursor-example" src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
-				+ ' title="单击显示大图" onclick="showImageModal(\''
-				+ url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"'
+				+ ' title="单击显示大图" onclick="showImageModal(\'' + url
 				+ '\',820 ,650)"'
-				'/>';
+		'/>';
 	} else {
 		html += url;
 	}
@@ -2951,18 +3018,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	if (!Ext.isEmpty(urlPhotoApply6)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply6;
 		html += '<img class="cursor-example" src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
-				+ ' title="单击显示大图" onclick="showImageModal(\''
-				+ url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"'
+				+ ' title="单击显示大图" onclick="showImageModal(\'' + url
 				+ '\',820 ,650)"'
-				'/>';
+		'/>';
 	} else {
 		html += url;
 	}
 	html += '</td>';
 	html += '</tr>';
 	html += '</table>';
-	
+
 	var win = new Ext.Window({
 		title : '拍照图',
 		width : 1024,
@@ -2999,7 +3065,7 @@ function formatDate(date) {
 }
 
 // 显示模态窗口函数
-function showImageModal(defectPicture,width,height) {
+function showImageModal(defectPicture, width, height) {
 	// 创建模态窗口
 	var src = defectPicture + '?ver=' + Math.random();
 	var win = new Ext.Window({

@@ -316,8 +316,10 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.exportExcel = function() {
 			.getValue();
 
 	var lineId = this.queryPanel.lineId.getValue();
+
+	
 	if (dayDiff(start, end) > 61 && Ext.isEmpty(lineId)) {
-		Ext.Msg.alert("系统提示", "导出间隔日期不能大于2个月！");
+		Ext.Msg.alert("系统提示", "导出间隔日期不能大于两个月！");
 		return false;
 
 	}

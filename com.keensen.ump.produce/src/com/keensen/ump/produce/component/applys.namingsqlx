@@ -796,4 +796,25 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
 	  FROM DUAL
 	CONNECT BY LEVEL &lt;= #quantityBox#
      </select>
+     
+     
+     <insert id="insertHHMarkPrint" parameterClass="java.util.HashMap" >
+     insert into KS_COMPONENT_HH_MARK_PRINT
+     (id,create_user_id,create_name,create_time,order_id,
+     order_No,prod_Spec_Name,tap_Color,order_Amount,apply_Amount,
+     quantity_Box,ifnsf,dry_Wet,Batch_No,iflog)
+     select SEQU_COMPONENT_HH_MARK_PRINT.Nextval,#userId#,#userName#,sysdate,#orderId#,
+     #orderNo#,#prodSpecName#,#tapColor#,#orderAmount#,#applyAmount#,
+     CASE
+         WHEN LEVEL = #quantityBox# THEN
+          case when #quantityLastBox#>0 then #quantityLastBox# else #quantityPerBox# end
+         ELSE
+          #quantityPerBox#
+       END,#nsf#,#dryWet#,
+     REPLACE(#markBatchNo#, 'xxx', TRIM(TO_CHAR(LEVEL, '000'))) ,
+     #log#
+     FROM DUAL
+	CONNECT BY LEVEL &lt;= #quantityBox#
+     </insert>
+ 
 </sqlMap>

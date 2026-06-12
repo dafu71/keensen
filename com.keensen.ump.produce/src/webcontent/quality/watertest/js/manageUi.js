@@ -10,6 +10,8 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 		this.initEditWindow();
 		this.initCopyWindow();
 
+		this.initDegradeWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -19,6 +21,54 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 	}
 
 	this.initStore = function() {
+		
+		this.dryWetStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['干膜', '干膜'], ['湿膜', '湿膜']]
+				});
+		
+		this.colorTapeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['水光蓝', '水光蓝'], ['蓝', '蓝'], ['绿', '绿'], ['灰', '灰'],
+							['黄', '黄'], ['白', '白'], ['黑', '黑']]
+				});
+				
+		this.machineCodeStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.base.workorder.queryMachine.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/type' : '卷膜'
+					},
+					fields : [{
+								name : 'code'
+							}, {
+								name : 'name'
+							}, {
+								name : 'type'
+							}, {
+								name : 'ip'
+							}]
+				})
+				
+		this.describeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [
+							['气检NG水测不合格', '气检NG水测不合格'],
+							['后端面胶水不良', '补胶后端面胶水'],
+							['端面不良(膜片打折)',
+									'端面不良(膜片打折)'],
+							['端面不良(浓网打折)',
+									'端面不良(浓网打折)'],
+							['端面不良(淡网打折)',
+									'端面不良(淡网打折)'],
+							['端面不良(端面不平)',
+									'端面不良(端面不平)'],
+							['中心管不良(来料)', '中心管不良(来料)'],
+							['中心管不良(制程)', '中心管不良(制程)'],
+							['膜体长度异常', '膜体长度异常'],
+							['湿膜入库', '湿膜入库']]
+				});
 
 		this.isProdQualifiedStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -250,7 +300,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// rescode : '10002661',
-					//hidden : true,
+					// hidden : true,
 					id : hwatertestExportButton,
 					scope : this,
 					iconCls : 'icon-application_excel',
@@ -290,6 +340,11 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '->', {
+						text : '元件降级',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onDegrade
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.hwatertest.deleteWaterTest.biz.ext',
@@ -462,6 +517,12 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							name : 'remark'
 						}, {
 							name : 'cmBatchNo'
+						}, {
+							name : 'numPerWad'
+						}, {
+							name : 'pageWidth'
+						}, {
+							name : 'blankingSize'
 						}]
 			})
 		})
@@ -536,30 +597,27 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 								},
 								'select' : function(combo, record, index) {
 									if (index > -1) {
-										
-										_this.addWindow.prodGpdStd
-												.setValue('');
+
+										_this.addWindow.prodGpdStd.setValue('');
 										_this.addWindow.prodSaltStd
 												.setValue('');
-												
+
 										var testSpecId = combo.getValue();
 										var i = _this.waterStdStore.find(
 												'prodSpecId', testSpecId, 0,
 												false);
 										var rec = _this.waterStdStore.getAt(i);
-										
+
 										var bGpdLowLimit = '';
 										var bSaltLowLimit = '';
-										if(null != rec.get('aGpdLowLimit')){
+										if (null != rec.get('aGpdLowLimit')) {
 											bGpdLowLimit = rec
-												.get('aGpdLowLimit');
+													.get('aGpdLowLimit');
 										}
-										if(null != rec.get('aSaltLowLimit')){
+										if (null != rec.get('aSaltLowLimit')) {
 											bSaltLowLimit = rec
-												.get('aSaltLowLimit');
+													.get('aSaltLowLimit');
 										}
-										
-										
 
 										_this.addWindow.prodGpdStd
 												.setValue(bGpdLowLimit);
@@ -910,12 +968,12 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 								},
 								'select' : function(combo, record, index) {
 									if (index > -1) {
-										
+
 										_this.editWindow.prodGpdStd
 												.setValue('');
 										_this.editWindow.prodSaltStd
 												.setValue('');
-												
+
 										var testSpecId = combo.getValue();
 										var i = _this.waterStdStore.find(
 												'prodSpecId', testSpecId, 0,
@@ -923,13 +981,13 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 										var rec = _this.waterStdStore.getAt(i);
 										var bGpdLowLimit = '';
 										var bSaltLowLimit = '';
-										if(null != rec.get('aGpdLowLimit')){
+										if (null != rec.get('aGpdLowLimit')) {
 											bGpdLowLimit = rec
-												.get('aGpdLowLimit');
+													.get('aGpdLowLimit');
 										}
-										if(null != rec.get('aSaltLowLimit')){
+										if (null != rec.get('aSaltLowLimit')) {
 											bSaltLowLimit = rec
-												.get('aSaltLowLimit');
+													.get('aSaltLowLimit');
 										}
 
 										_this.editWindow.prodGpdStd
@@ -1231,7 +1289,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 
 		});
 	}
-	
+
 	this.initCopyWindow = function() {
 		var _this = this;
 		this.copyWindow = this.copyWindow || new Ext.fn.FormWindow({
@@ -1283,7 +1341,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							format : "Y-m-d H:i:00",
 							value : new Date(),
 							name : 'entity/testTime',
-							//dataIndex : 'testTime',
+							// dataIndex : 'testTime',
 							ref : '../../testTime',
 							fieldLabel : '检测时间',
 							allowBlank : false,
@@ -1305,12 +1363,12 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 								},
 								'select' : function(combo, record, index) {
 									if (index > -1) {
-										
+
 										_this.editWindow.prodGpdStd
 												.setValue('');
 										_this.editWindow.prodSaltStd
 												.setValue('');
-												
+
 										var testSpecId = combo.getValue();
 										var i = _this.waterStdStore.find(
 												'prodSpecId', testSpecId, 0,
@@ -1318,13 +1376,13 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 										var rec = _this.waterStdStore.getAt(i);
 										var bGpdLowLimit = '';
 										var bSaltLowLimit = '';
-										if(null != rec.get('aGpdLowLimit')){
+										if (null != rec.get('aGpdLowLimit')) {
 											bGpdLowLimit = rec
-												.get('aGpdLowLimit');
+													.get('aGpdLowLimit');
 										}
-										if(null != rec.get('aSaltLowLimit')){
+										if (null != rec.get('aSaltLowLimit')) {
 											bSaltLowLimit = rec
-												.get('aSaltLowLimit');
+													.get('aSaltLowLimit');
 										}
 
 										_this.editWindow.prodGpdStd
@@ -1620,6 +1678,250 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 						}]
 			}]
 
+		});
+	}
+
+	this.initDegradeWindow = function() {
+
+		var _this = this;
+		var amountId = Ext.id();
+
+		this.quantityField = this.quantityField || new Ext.Container({
+					autoEl : 'div',
+					layout : 'column',
+					anchor : "95%",
+					colspan : 1,
+					fieldLabel : '数量(支)<font color=red>*</font>',
+					defaults : {
+						xtype : "container",
+						autoEl : "div",
+						anchor : "100%"
+					},
+					items : [{
+								columnWidth : 0.55,
+								anchor : "100%",
+								layout : "anchor",
+								id : amountId,
+								xtype : 'numberfield',
+								allowBlank : false,
+								dataIndex : 'amount',
+								name : 'entity/amount'
+							}, {
+								columnWidth : 0.45,
+								anchor : "100%",
+								layout : "anchor",
+								text : '计算膜片长度',
+								xtype : 'button',
+								handler : function() {
+									var obj = Ext.getCmp(amountId);
+									var value = obj.getValue()
+									if (!Ext.isEmpty(value)) {
+										_this.onCalcLength(value);
+									}
+								}
+
+							}]
+				});
+
+		this.degradeWindow = this.degradeWindow || new Ext.fn.FormWindow({
+			title : '元件降级',
+			height : 600,
+			width : 800,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+				xtype : 'inputpanel',
+				autoHide : false,
+				successFn : function() {
+					_this.listPanel.store.load();
+					// _this.degradeWindow.items.items[0].form.reset();
+					Ext.getCmp(amountId).setValue('');
+					_this.degradeWindow.blankingSize.setValue('');
+					_this.degradeWindow.describe.setValue('');
+
+				},
+				pgrid : this.listPanel,
+				columns : 2,
+				saveUrl : 'com.keensen.ump.produce.component.household.saveDegrade.biz.ext',
+				fields : [{
+							xtype : 'prodspeccombobox',
+							allowBlank : false,
+							readOnly : true,
+							hiddenName : 'entity/prodSpecId',
+							valueField : "id",
+							displayField : "name",
+							ref : '../../prodSpecId',
+							fieldLabel : '卷膜执行型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/labelSpecName',
+							// allowBlank : false,
+							ref : '../../labelSpecName',
+							fieldLabel : '贴标型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/batchNo',
+							ref : '../../batchNo',
+							allowBlank : false,
+							readOnly : true,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1
+						}, this.quantityField, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							ref : '../../orderNo',
+							readOnly : true,
+							fieldLabel : '订单号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/blankingSize',
+							ref : '../../blankingSize',
+							allowBlank : false,
+							fieldLabel : '膜片长度(m)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '胶带颜色',
+							ref : '../../colorTape',
+							hiddenName : 'entity/colorTape',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.colorTapeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.colorTape.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '规格',
+							ref : '../../dryWet',
+							hiddenName : 'entity/dryWet',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.dryWetStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.dryWet.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/orderDate',
+							ref : '../../orderDate',
+							allowBlank : false,
+							//readOnly : true,
+							fieldLabel : '工单日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/judgeDate',
+							ref : '../../judgeDate',
+							allowBlank : false,
+							//readOnly : true,
+							fieldLabel : '判定日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '卷膜机台',
+							ref : '../../machineCode',
+							hiddenName : 'entity/machineCode',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							//readOnly : true,
+							allowBlank : false,
+							store : this.machineCodeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.machineCode.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/jmName',
+							ref : '../../jmName',
+							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '卷制人员',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '不良描述',
+							ref : '../../describe',
+							hiddenName : 'entity/describe',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.describeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.describe.reset()
+								}
+							}
+						}]
+			}]
 		});
 	}
 

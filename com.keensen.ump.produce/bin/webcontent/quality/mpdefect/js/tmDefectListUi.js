@@ -250,6 +250,9 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 						dataIndex : 'tmBatchNo',
 						header : '涂膜批号'
 					}, {
+						dataIndex : 'dimoBatchNo',
+						header : '底膜批号'
+					}, {
 						dataIndex : 'defectName',
 						width:200,
 						header : '不良项目'
@@ -330,6 +333,8 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'dimoBatchNo'
+						},{
 							name : 'supName'
 						},{
 							name : 'prodFlagName'

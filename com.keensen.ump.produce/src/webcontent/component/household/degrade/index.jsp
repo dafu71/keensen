@@ -17,11 +17,11 @@
 		exportflag="1";
   }	
   //品管30479  30797
-  //班长  10001951  10001947 
+  //班长  10001951  10001947   KS00647 刘泉
     int modifyLimit = 0;
      //品管
     if(roleId.indexOf("30479")>-1 || roleId.indexOf("30797")>-1
-    || roleId.indexOf("10001951")>-1 || roleId.indexOf("10001947")>-1){
+    || roleId.indexOf("10001951")>-1 || roleId.indexOf("10001947")>-1 || uid.equals("KS00647")){
     	modifyLimit = 1;
     }
     

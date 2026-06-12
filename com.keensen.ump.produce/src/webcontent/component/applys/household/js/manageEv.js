@@ -823,6 +823,10 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onMarkPrint = functi
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveMarkPrint = function() {
 
 	if (this.markPrintPanel.form.isValid()) {
+		
+		
+		var orderId = this.markPrintPanel.orderId.getValue();
+		
 		var f = document.getElementById('applysapplymgrForm');
 		f.markBatchNo.value = this.markPrintPanel.markBatchNo.getValue();
 		f.prodSpecName.value = this.markPrintPanel.prodSpecName.getValue();
@@ -833,6 +837,8 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveMarkPrint = fu
 		f.dryWet.value = this.markPrintPanel.dryWet.getValue();
 		f.nsf.value = this.markPrintPanel.nsf.getValue() ? 'Y' : 'N';
 		f.log.value = this.markPrintPanel.log.getValue() ? 'Y' : 'N';
+		
+		f.orderId.value = orderId;
 		
 		var actionUrl = 'com.keensen.ump.produce.component.printHHProdMarks.flow?time='
 				+ Math.random() + '&token=' + Date.now();
@@ -1191,7 +1197,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.viewPhotos = functio
 				html += '</table>';
 
 				var win = new Ext.Window({
-					title : '拍照查看',
+					title : '请检拍照',
 					width : 1024,
 					height : 680,
 					layout : 'fit',
@@ -1248,6 +1254,189 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.uploadPhotos = funct
 	var win = new Ext.Window({
 		title : '多文件上传',
 		id:'applysapplymgrphotowin',
+		width : 600,
+		height : 480,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : '<iframe style="border-top-width: 0px; border-left-width: 0px; border-bottom-width: 0px; ' +
+				'width: 578px; height: 475px; border-right-width: 0px" ' +
+				'src=' + src +
+				' frameborder="0" width="100%" scrolling="no" height="100%"></iframe>',
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onViewCheckPhotos = function() {
+
+	var _this = this;
+	var checkId = '';
+	
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			checkId = B[0].get('id');
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+		return;
+	}
+	
+	
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.applys.expandHHHead.biz.ext",
+		method : "post",
+		jsonData : {
+			'entity/id' : checkId
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var data = ret.data;
+
+				var urlPhotoApply = data.urlPhotoApply;
+				var urlPhotoApply2 = data.urlPhotoApply2;
+				var urlPhotoApply3 = data.urlPhotoApply3;
+				var urlPhotoApply4 = data.urlPhotoApply4;
+				var urlPhotoApply5 = data.urlPhotoApply5;
+				var urlPhotoApply6 = data.urlPhotoApply6;
+
+				var url = '&nbsp;';
+
+				var html = '<table border=1 align=center style="width :100%;height : 100%; border-collapse: collapse;">'
+				html += '<tr>'
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle; width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply)) {
+					url = markRootUrl + 'myupload/apply2/' + urlPhotoApply;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply2)) {
+					url = markRootUrl + 'myupload/apply2/' + urlPhotoApply2;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply3)) {
+					url = markRootUrl + 'myupload/apply2/' + urlPhotoApply2;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				html += '</tr>';
+				html += '<tr>'
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply4)) {
+					url = markRootUrl + 'myupload/apply2/' + urlPhotoApply4;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply5)) {
+					url = markRootUrl + 'myupload/apply2/' + urlPhotoApply5;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply6)) {
+					url = markRootUrl + 'myupload/apply2/' + urlPhotoApply6;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				html += '</tr>';
+				html += '</table>';
+
+				var win = new Ext.Window({
+					title : '品管拍照',
+					width : 1024,
+					height : 680,
+					layout : 'fit',
+					resizable : false,
+					closable : true,
+					modal : true,
+					bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+					html : html,
+					buttons : [{
+								text : '多文件上传',
+								// hidden : uid != 'dafu',
+								handler : function() {
+									_this.uploadCheckPhotos(checkId);
+									win.close();
+
+								}
+							}, {
+								text : '关闭',
+								handler : function() {
+									win.close();
+								}
+							}]
+				});
+				// 显示窗口
+				win.show();
+			}
+
+		},
+		callback : function() {
+
+		}
+	})
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.uploadCheckPhotos = function(
+		checkId) {
+	var _this = this;
+
+	if (Ext.isEmpty(checkId)) {
+		Ext.Msg.alert("系统提示", "请扫码请检单!");
+		return;
+	}
+
+	var src = markRootUrl + 'produce/component/linecheck/household/uploadHHCheckPhotos.jsp?uploadwin=applysapplymgr2photowin&' + 
+	'checkId='+checkId;
+
+	var win = new Ext.Window({
+		title : '多文件上传',
+		id:'applysapplymgr2photowin',
 		width : 600,
 		height : 480,
 		layout : 'fit',

@@ -153,7 +153,7 @@ com.keensen.ump.produce.component.household.DegradeMgr.prototype.exportExcel = f
 
 com.keensen.ump.produce.component.household.DegradeMgr.prototype.onCalc = function(
 		v) {
-	var obj = !this.inputWindow.hidden ? this.inputWindow : this.editWindow;
+	var obj = !this.inputWindow.hidden ? this.inputWindow : this.editWindow.hidden ?this.copyWindow  : this.editWindow;
 	var prodSpec = obj.prodSpecId;
 	var prodSpecId = prodSpec.getValue();
 	if (Ext.isEmpty(prodSpecId)) {
@@ -169,8 +169,10 @@ com.keensen.ump.produce.component.household.DegradeMgr.prototype.onCalc = functi
 	}
 	var rec = store.getAt(i);
 	var blankingSize2 = rec.get('blankingSize');
+	var numPerWad = rec.get('numPerWad');
+	var pageWidth = rec.get('pageWidth');
 
-	var blankingSize = roundToDecimalPlace(blankingSize2 * v, 2);
+	var blankingSize = roundToDecimalPlace(numPerWad * pageWidth * blankingSize2 * v, 2);
 	obj.blankingSize.setValue(blankingSize);
 
 };

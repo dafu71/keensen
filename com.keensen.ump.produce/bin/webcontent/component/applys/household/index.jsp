@@ -67,8 +67,8 @@
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 
-<js:load scriptPath="produce/component/applys/household/js/manageUi.js" />
-<js:load scriptPath="produce/component/applys/household/js/manageEv.js" />
+<js:load scriptPath="produce/component/applys/household/js/manageUi2.js" />
+<js:load scriptPath="produce/component/applys/household/js/manageEv2.js" />
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = Ext.id();
@@ -97,6 +97,7 @@
 			<input type="hidden" name="dryWet"/>
 			<input type="hidden" name="nsf"/>
 			<input type="hidden" name="log"/>
+			<input type="hidden" name="orderId"/>
 		</form>
 	</div>
 	

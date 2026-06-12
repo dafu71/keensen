@@ -34,7 +34,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 		this.drywetStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['干', '干'], ['湿', '湿'], ['干/湿', '干/湿']]
+					data : [['干', '干'], ['湿', '湿'],['干/湿', '干/湿']]
 				});
 
 		this.ynStore = new Ext.data.SimpleStore({
@@ -208,7 +208,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								anchor : '100%',
 								colspan : 1,
 								emptyText : '--请选择--',
-								editable : false,
+								editable : true,
 								store : this.drywetStore,
 								displayField : "name",
 								valueField : "code",
@@ -260,7 +260,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : uid != 'dafu' && uid != 'KS01479'
+					hidden : uid != 'dafu' && uid != 'KS01479' && uid != 'KS00307'
 							&& uid != 'KS00524' && uid != 'KS01408',
 					handler : this.exportExcel2
 				});
@@ -364,11 +364,17 @@ com.keensen.ump.produce.component.applyMgr = function() {
 									handler : this.onUploadProd
 								}]
 					}, '-', {
-						text : '拍照查看',
-						hidden : uid != 'dafu',
+						text : '请检拍照',
+						//hidden : uid != 'dafu',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onViewPhotos
+					}, '-', {
+						text : '品管拍照',
+						//hidden : uid != 'dafu',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewCheckPhotos
 					}/*
 						 * , '-', { text : '请检判定', scope : this, iconCls :
 						 * 'icon-application_edit', hidden : uid != 'dafu',

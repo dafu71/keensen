@@ -4,7 +4,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 
 	this.getRight();
 	
-	if(ip == '172.16.10.86'){
+	
+	
+	/*if(ip == '172.16.10.86'){
 		this.currentMachineCode = 'J86';
 	}
 	if(ip == '172.16.10.54'){
@@ -19,6 +21,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 	if(ip == '172.16.137.214'){
 		this.currentMachineCode = 'J90';
 	}
+	if(ip == '172.16.10.191'){
+		this.currentMachineCode = 'J91';
+	}*/
 	
 	this.queryPanel4EditDefect.mon(this.queryPanel4EditDefect, 'query',
 			function(form, vals) {
@@ -84,11 +89,36 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 	// 修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 		
+				if(this.opt == 'degrade'){
+					
+					this.degradeWindow.prodSpecId.setValue(cell.get('prodSpecId'));
+					this.degradeWindow.labelSpecName.setValue(cell.get('prodSpecName'));
+					this.degradeWindow.batchNo.setValue(cell.get('tmBatchNo'));
+					this.degradeWindow.orderNo.setValue(cell.get('orderNo'));
+					this.degradeWindow.orderDate.setValue(cell.get('orderDate').substring(0,10));
+					this.degradeWindow.judgeDate.setValue(new Date());
+					this.degradeWindow.jmName.setValue(cell.get('userName'));
+					this.degradeWindow.machineCode.setValue(Ext.isEmpty(cell.get('machineName'))?'-':cell.get('machineName').replace(/\D/g, '').trim() + '#');
+					this.degradeWindow.show();
+					return;
+				}
+		
 				if (this.opt == 'adddefect') {
 					
 					this.listPanel4EditDefect.store.reload();
 					this.editDefectWindow.relationId = cell.get('id');
+					
+					this.editDefectWindow.numPerWad = cell.get('numPerWad');
+					this.editDefectWindow.blankingSize = cell.get('blankingSize');
+					this.editDefectWindow.pageWidth = cell.get('pageWidth');
+					
 					this.editDefectWindow.show();
+					return;
+				}
+				
+				if(this.opt == 'view'){
+					this.viewWindow.items.items[0].loadData(cell);
+					this.viewWindow.show();
 					return;
 				}
 				
@@ -118,6 +148,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onAdd = funct
 		this.addWindow.workerId.setValue(operatorid);
 	}
 	this.addWindow.machineCode.setValue(this.currentMachineCode);
+	this.addWindow.orderDate.setValue(new Date());
 
 }
 
@@ -126,18 +157,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onDel = funct
 }
 
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onView = function() {
-	var B = this.listPanel.getSelectionModel().getSelections();
-	if (B && B.length != 0) {
-		if (B.length > 1) {
-			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
-			return
-		} else {
-			var A = B[0];
-			this.viewWindow.items.items[0].loadData(A);
-			this.viewWindow.show();
-
-		}
-	}
+	this.opt = 'view';
+	this.listPanel.onEdit();
 }
 
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.exportExcel = function() {
@@ -196,7 +217,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.getRight = fu
 					var ret = Ext.decode(resp.responseText);
 					var data = ret.data;
 					var exportExcel = data[0].exportExcel;
-
+					var machineCode = data[0].machineCode;
+					_this.currentMachineCode = machineCode[ip];
 					Ext.getCmp(exportExcelBtn).setVisible(exportExcel
 							.indexOf(uid) != -1);
 
@@ -327,10 +349,22 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.saveJmDefect 
 		defectId, field, newValue, oldValue) {
 
 	var _this = this;
+	var obj = {};
 	if (Ext.isEmpty(newValue))
 		return;
-
-	var obj = {};
+		
+    if(field == 'numDefect'){//不良只数
+    	var numDefect = newValue;
+    	var numPerWad = this.editDefectWindow.numPerWad;
+    	var blankingSize = this.editDefectWindow.blankingSize;
+    	var pageWidth = this.editDefectWindow.pageWidth;
+    	
+    	var length = numDefect * numPerWad * blankingSize * pageWidth;
+    	length = roundToDecimalPlace(length,2);
+    	obj['entity/length'] = length;
+    	_this.rec.data['length']= length;
+    }
+		
 	var relationId = this.editDefectWindow.relationId;
 	obj['entity/defectId'] = defectId;
 	obj['entity/' + field] = newValue;
@@ -366,6 +400,37 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.saveJmDefect 
 	})
 }
 
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onDegrade = function() {
+	this.opt = 'degrade';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onCalc = function(
+		v) {
+	var obj = this.degradeWindow;
+	var prodSpec = obj.prodSpecId;
+	var prodSpecId = prodSpec.getValue();
+	if (Ext.isEmpty(prodSpecId)) {
+		Ext.Msg.alert("系统提示", "请选择卷膜执行型号!");
+		return false;
+	}
+
+	var store = prodSpec.store;
+	var i = store.find('id', prodSpecId);
+	if (i == -1) {
+		Ext.Msg.alert("系统提示", "没有匹配到数据!");
+		return false;
+	}
+	var rec = store.getAt(i);
+	var blankingSize2 = rec.get('blankingSize');
+	var numPerWad = rec.get('numPerWad');
+	var pageWidth = rec.get('pageWidth');
+
+	var blankingSize = roundToDecimalPlace(numPerWad * pageWidth * blankingSize2 * v, 2);
+	obj.blankingSize.setValue(blankingSize);
+
+};
+
 function defectView2(relationId, batchNo) {
 
 	var spacepanel = Ext.getCmp('spacepanel');
@@ -387,4 +452,9 @@ function defectView2(relationId, batchNo) {
 				}
 			});
 
+}
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
 }

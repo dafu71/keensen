@@ -8,8 +8,9 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 
 		this.initTrialPanel();
 		this.initProdPanel();
-		
+
 		this.initDisinfectListWindow();
+		this.initDisinfectBatchWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -234,7 +235,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						anchor : '85%',
 						xtype : 'textfield',
 						fieldLabel : '至'
-					},{
+					}, {
 						xtype : 'datetimefield',
 						name : 'condition/rCheckBeginDate',
 						fieldLabel : '复检时间',
@@ -317,6 +318,11 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onDisinfect
+					}, '-', {
+						text : '批量消毒',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onDisinfectBatch
 					}, '-', {
 						text : '消毒记录',
 						scope : this,
@@ -467,20 +473,14 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				header : '量产标准<BR>系数B%',
 				width : 70,
 				dataIndex : 'batchFactorBStd'
-			}/*, {
-
-				header : '单品标准<BR>GPD',
-				width : 90,
-				dataIndex : 'prodGpdStdStr'
-			}, {
-				header : '单品标准<BR>脱盐率%',
-				width : 70,
-				dataIndex : 'prodSaltStd'
-			}, {
-				header : '单品标准<BR>系数B%',
-				width : 70,
-				dataIndex : 'prodFactorBStd'
-			}*/, {
+			}/*
+				 * , {
+				 * 
+				 * header : '单品标准<BR>GPD', width : 90, dataIndex :
+				 * 'prodGpdStdStr' }, { header : '单品标准<BR>脱盐率%', width : 70,
+				 * dataIndex : 'prodSaltStd' }, { header : '单品标准<BR>系数B%',
+				 * width : 70, dataIndex : 'prodFactorBStd' }
+				 */, {
 				header : '判定说明',
 				width : 300,
 				dataIndex : 'remark'
@@ -1404,13 +1404,13 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 							titleCollapse : false,
 							fields : [{
 										xtype : 'textfield',
-										ref:'../jmBatchNo',
+										ref : '../jmBatchNo',
 										name : 'condition/jmBatchNo',
 										anchor : '100%',
 										fieldLabel : '卷膜序号'
-									},{
+									}, {
 										xtype : 'hidden',
-										ref:'../juanmoBatchId',
+										ref : '../juanmoBatchId',
 										name : 'condition/juanmoBatchId'
 									}]
 						});
@@ -1450,9 +1450,111 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 					})
 				})
 
-		this.disinfectWindow = this.disinfectWindow
+		this.disinfectWindow = this.disinfectWindow || new Ext.Window({
+					title : '消毒',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.queryDisinfectPanel, this.disinfectListPanel]
+
+				});
+	}
+
+	this.initDisinfectBatchWindow = function() {
+
+		
+
+		this.queryDisinfectBatchPanel = this.queryDisinfectBatchPanel
+				|| new Ext.fn.QueryPanel({
+							height : 200,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textarea',
+										height : 140,
+										ref : '../jmBatchNoStr2',
+										emptyText : '多个批次请用逗号分隔，或一行一个批次',
+										anchor : '100%',
+										fieldLabel : '卷膜序号'
+									}, {
+										xtype : 'textarea',
+										height : 140,
+										ref : '../batchNoStr2',
+										emptyText : '多个批次请用逗号分隔，或一行一个批次',
+										anchor : '100%',
+										fieldLabel : '元件序号'
+									}, {
+										xtype : 'hidden',
+										ref : '../jmBatchNoStr',
+										name : 'condition/jmBatchNoStr'
+									}, {
+										xtype : 'hidden',
+										ref : '../batchNoStr',
+										name : 'condition/batchNoStr'
+										
+									}]
+						});
+
+		this.queryDisinfectBatchPanel.addButton({
+					text : "确认消毒",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.disinfectBatch
+				});
+				
+		this.queryDisinfectBatchPanel.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function(){
+						this.disinfectBatchWindow.hide();
+					}
+				});
+
+		this.disinfectBatchListPanel = this.disinfectBatchListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							 {
+								dataIndex : 'juanmoBatchNo',
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'prodBatchNo',
+								header : '元件序号'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.watertest.queryRecords.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {},
+						fields : [{
+									name : 'juanmoBatchNo'
+								}, {
+									name : 'prodBatchNo'
+								}, {
+									name : 'juanmoBatchId'
+								}]
+					})
+				})
+
+		this.disinfectBatchWindow = this.disinfectBatchWindow
 				|| new Ext.Window({
-							title : '消毒',
+							title : '批量消毒',
 							resizable : true,
 							minimizable : false,
 							maximizable : true,
@@ -1463,8 +1565,8 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 							width : 800,
 							height : 600,
 							layout : 'border',
-							items : [this.queryDisinfectPanel,
-									this.disinfectListPanel]
+							items : [this.queryDisinfectBatchPanel,
+									this.disinfectBatchListPanel]
 
 						});
 	}

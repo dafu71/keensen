@@ -5,6 +5,56 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 	this.getRight();
 
 	// 查询事件
+	this.queryDisinfectBatchPanel.mon(this.queryDisinfectBatchPanel, 'query',
+			function(form, vals) {
+
+				var jmBatchNoStr2 = this.queryDisinfectBatchPanel.jmBatchNoStr2
+						.getValue();
+				var batchNoStr2 = this.queryDisinfectBatchPanel.batchNoStr2
+						.getValue();
+
+				if (Ext.isEmpty(jmBatchNoStr2) && Ext.isEmpty(batchNoStr2)) {
+					Ext.Msg.alert("系统提示", "请输入卷膜序号或元件序号查询!");
+					return;
+				}
+
+				var regEx = new RegExp("\\n", "gi");
+
+				if (!Ext.isEmpty(jmBatchNoStr2)) {
+
+					jmBatchNoStr2 = jmBatchNoStr2.replace(regEx, ",");
+					jmBatchNoStr2 = jmBatchNoStr2.replaceAll('，', ',');
+					jmBatchNoStr2 = jmBatchNoStr2.replaceAll(' ', '');
+					var arr = [];
+					arr = jmBatchNoStr2.split(',');
+					var arr2 = [];
+					for (var i = 0; i < arr.length; i++) {
+						arr2.push("'" + arr[i] + "'");
+					}
+					this.queryDisinfectBatchPanel.jmBatchNoStr.setValue(arr2
+							.join(','));
+				}
+
+				if (!Ext.isEmpty(batchNoStr2)) {
+					batchNoStr2 = batchNoStr2.replace(regEx, ",");
+					batchNoStr2 = batchNoStr2.replaceAll('，', ',');
+					batchNoStr2 = batchNoStr2.replaceAll(' ', '');
+					var arr = [];
+					arr = batchNoStr2.split(',');
+					var arr2 = [];
+					for (var i = 0; i < arr.length; i++) {
+						arr2.push("'" + arr[i] + "'");
+					}
+					this.queryDisinfectBatchPanel.batchNoStr.setValue(arr2
+							.join(','));
+				}
+				var store = this.disinfectBatchListPanel.store;
+				store.baseParams = this.queryDisinfectBatchPanel.getForm()
+						.getValues();
+				store.load();
+			}, this);
+
+	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
 		var store = this.listPanel.store;
@@ -160,7 +210,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 							.setValue(juanmoBatchId);
 					this.disinfectWindow.show();
 					this.queryDisinfectPanel.fireEvent('query');
-					
+
 				}
 
 			}, this);
@@ -710,18 +760,19 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judge = function() {
 	var bGpdLowLimit = _this.firstTestWindow2.bGpdLowLimit.getValue() * 1;
 	var bSaltLowLimit = _this.firstTestWindow2.bSaltLowLimit.getValue() * 1;
 
-	//适配量产 2026-04-17 取消优先标准2
+	// 适配量产 2026-04-17 取消优先标准2
 	// 优先标准2
-	//var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
-	//if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit != 0) {
-	//	prodGpdLowLimit = bGpdLowLimit;
-	//	prodSaltLowLimit = bSaltLowLimit;
-	//} else {
-		prodGpdLowLimit = aGpdLowLimit;
-		prodGpdUpLimit = aGpdUpLimit;
-		prodSaltLowLimit = aSaltLowLimit;
-		prodFactorBUpLimit = aFactorBUpLimit;
-	//}
+	// var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit,
+	// prodFactorBUpLimit;
+	// if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit != 0) {
+	// prodGpdLowLimit = bGpdLowLimit;
+	// prodSaltLowLimit = bSaltLowLimit;
+	// } else {
+	prodGpdLowLimit = aGpdLowLimit;
+	prodGpdUpLimit = aGpdUpLimit;
+	prodSaltLowLimit = aSaltLowLimit;
+	prodFactorBUpLimit = aFactorBUpLimit;
+	// }
 
 	// 标准的产水量下限、脱盐率是必须有的，其它的可能为空
 	if (!Ext.isEmpty(prodGpdLowLimit) && !Ext.isEmpty(prodSaltLowLimit)) {
@@ -937,6 +988,67 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.onDisinfect = function() {
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.onViewDisinfect = function() {
 	this.opt = 'viewdisinfect';
 	this.listPanel.onEdit();
+}
+
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.onDisinfectBatch = function() {
+	
+	this.disinfectBatchListPanel.store.removeAll();
+	this.queryDisinfectBatchPanel.form.reset();
+	this.disinfectBatchWindow.show();
+}
+
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.disinfectBatch = function() {
+
+	var _this = this;
+	var records = this.disinfectBatchListPanel.store.getRange();
+
+	if (records.length == 0) {
+		Ext.Msg.alert("系统提示", "消毒元件列表不能为空！");
+		return false;
+	}
+
+	var arr = [];
+	for (var i = 0; i < records.length; i++) {
+		var r = records[i];
+		var juanmoBatchId = r.get('juanmoBatchId');
+		arr.push(juanmoBatchId);
+
+	}
+
+	Ext.Msg.confirm("系统提示", "您确定元件已消毒吗？", function(D) {
+		if (D == "yes") {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+						url : "com.keensen.ump.qinsen.watertest.saveDisinfectBatch.biz.ext",
+						method : "post",
+						jsonData : {
+							'juanmoBatchIds' : arr.join(',')
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								Ext.Msg.alert("系统提示", "操作成功！", function() {
+											_this.listPanel.store.reload();
+											_this.disinfectBatchWindow.hide();
+
+										})
+							} else {
+								Ext.Msg.alert("系统提示", "操作失败！")
+
+							}
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+		}
+	}, this)
+
 }
 
 function formatDate(date) {

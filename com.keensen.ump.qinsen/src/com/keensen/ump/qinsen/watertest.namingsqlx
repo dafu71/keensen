@@ -220,6 +220,15 @@
 	</isNotNull>
 	
 	
+	<isNotNull prepend="" property="batchNoStr">
+	   AND Q.BATCH_NO in ($batchNoStr$)
+	</isNotNull>
+	<isNotNull prepend="" property="jmBatchNoStr">
+	   AND J.BATCH_NO in ($jmBatchNoStr$)
+	</isNotNull>
+	
+	
+	
 	<isNotNull prepend="" property="prodSpecId">
 	   AND Q.PROD_SPEC_ID = #prodSpecId#
 	</isNotNull>

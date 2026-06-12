@@ -181,6 +181,7 @@
 
 		l.line_name || '(' || l.line_code || ')' "lineName",
 		zr.batch_no "tmBatchNo",decode(zr.is_wx,'Y','是','否') "isWxName",
+		zr.dimo_batch_no "dimoBatchNo",
 		md.TACHE as "tache",
 		md.first as "first",
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
@@ -521,13 +522,13 @@
 		t1.SECOND as "second",
 		t1.THIRD as "third",
 		t1.FOURTH as "fourth",
-		0 as "length",
-		'卷膜' as "tacheCause"
-
+		0 as "length", 0 as "numDefect",
+		'卷膜' as "tacheCause",
+       t1.tache as "tache"
   FROM KS_QUALITY_prod_DEFECT T1
 	where 1=1
 	
-	<isNotNull prepend="and" property="tache">T1.tache = #tache#</isNotNull>
+	<isNotNull prepend="and" property="tache">T1.tache in ($tache$)</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
@@ -537,7 +538,7 @@
         <isNotNull prepend="and" property="fourth">t1.fourth '%' || #fourth# || '%'</isNotNull>
         <isNotNull prepend="and" property="advise">t1.advise '%' || #advise# || '%'</isNotNull>
 	
-	order by t1.first,t1.second,t1.third,t1.fourth
+	order by t1.tache,t1.first,t1.second,t1.third,t1.fourth
 	 </select>
     <select id="queryHHJmDefectList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
@@ -577,7 +578,8 @@
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
 		
 		,t1.advise "advise"
-
+		,t1.num_defect "numDefect"
+		,t1.type_deal "typeDeal"
   FROM KS_COMPONENT_HHJM_DEFECT_LIST T1
   left join KS_QUALITY_PROD_DEFECT md 
   on md.id = t1.defect_Id
@@ -769,7 +771,7 @@
 		t1.SECOND as "second",
 		t1.THIRD as "third",
 		t1.FOURTH as "fourth",
-		1 as "amount",
+		0 as "amount",
 		'' as "belongType",
 		'' as "tache",
 		'' as "dealType"

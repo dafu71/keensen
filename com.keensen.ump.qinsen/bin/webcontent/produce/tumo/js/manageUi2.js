@@ -3152,6 +3152,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.defectSampleWindow = this.defectSampleWindow || new Ext.Window({
 					title : '膜片取样',
+					
+					tumoBatchNo:'',
+					tumoBatchId:'',
+					
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
@@ -5842,7 +5846,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							dataIndex : 'numLabel',
 							fieldLabel : '标签数',
 							ref : '../../numLabel',
-							// allowBlank : false,
+							allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 

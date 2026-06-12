@@ -14,6 +14,15 @@
     String uname = userObject.getUserName();
     
     String ip = userObject.getUserRemoteIP();
+    
+    //品管30479  30797
+  //班长  10001951  10001947   KS00647 刘泉
+    int degradeLimit = 0;
+     //品管
+    if(roleId.indexOf("30479")>-1 || roleId.indexOf("30797")>-1
+    || roleId.indexOf("10001951")>-1 || roleId.indexOf("10001947")>-1 || uid.equals("KS00647")){
+    	degradeLimit = 1;
+    }
 %>
 <html>
 <!-- 
@@ -80,6 +89,7 @@ var opt = '';
   var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
   
+  var degradeLimit = "<%=degradeLimit %>";
   var machineCode = '';
   
   var ip = '<%=ip %>';

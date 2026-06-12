@@ -514,6 +514,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 		this.inputWindow.lineId.setValue(30200);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
+	
+	//测试用
+	if (ip == '172.16.137.214' || ip == '172.16.6.14') {
+		this.inputWindow.lineId.setValue(30200);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	
+	
+	
+	
 	var btn = this.inputWindow.buttons[2];
 	btn.setDisabled(true);
 }
@@ -818,6 +828,12 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 		this.inputWindow.lineId.setReadOnly(true);
 	}
 
+	//测试用
+	if (ip == '172.16.137.214' || ip == '172.16.6.14') {
+		this.inputWindow.lineId.setValue(30200);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	
 	var btn = this.inputWindow.buttons[2];
 	btn.setDisabled(true);
 }
@@ -1060,6 +1076,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.saveCdmDefect = function(
 		obj['entity/team'] = '30200';
 	}
 
+	//测试用
+	if (ip == '172.16.137.214' || ip == '172.16.6.14') {
+		obj['entity/team'] = '30200';
+	}
+	
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "正在保存,请稍候!"
 			});
@@ -1114,7 +1135,7 @@ function showImageModal(defectPicture) {
 	win.show();
 }
 
-function defectView2(relationId, batchNo) {
+function defectView22(relationId, batchNo) {
 
 	var spacepanel = Ext.getCmp('spacepanel');
 

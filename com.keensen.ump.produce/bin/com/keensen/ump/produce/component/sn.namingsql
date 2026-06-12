@@ -76,5 +76,7 @@
 	CONNECT BY LEVEL &lt;= #num#
     </select>
     <select id="queryYm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select SUBSTR(t.ymd,1,2) "ym" from V_KS_YMD t</select>
-    <select id="queryYmd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.ymd "ymd" from V_KS_YMD t</select>
+    <select id="queryYmd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select t.ymd <!--|| to_char(SYSDATE,'hhmm')--> "ymd" from V_KS_YMD t    
+    </select>
 </sqlMap>

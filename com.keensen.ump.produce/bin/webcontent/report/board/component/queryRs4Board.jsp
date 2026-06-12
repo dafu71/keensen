@@ -57,22 +57,22 @@
         </td>
 </tr>
  <tr>
-        <th width="10%" align="center" class="style5">
+        <th width="9%" align="center" class="style5">
          订单编号
         </th> 
-        <th width="10%" align="center" class="style5">
+        <th width="9%" align="center" class="style5">
           订单类型
         </th>        
-        <th  width="10%" align="center" class="style5">
+        <th  width="9%" align="center" class="style5">
           计划入库时间
         </th>
-        <th width="10%" align="center" class="style5">
+        <th width="9%" align="center" class="style5">
           卷膜型号
         </th>
-         <th width="10%" align="center" class="style5">
+         <th width="9%" align="center" class="style5">
           卷膜执行型号
         </th>
-        <th width="10%" align="center" class="style5">
+        <th width="9%" align="center" class="style5">
                  干膜/湿
         </th>
         <th width="6%" align="center" class="style5">
@@ -83,6 +83,9 @@
         </th>        
         <th  width="6%" align="center" class="style5">
           切边气检生产数量（支）
+        </th>
+        <th  width="6%" align="center" class="style5">
+          泄压合格数量（支）
         </th>
         <th width="5%" align="center" class="style5">
           贴标签数量（支）
@@ -141,6 +144,9 @@
         </td>
          <td align='center' class="<%=style5 %>" >
         <%=list[i].getString("qjCount") %>
+        </td>
+        <td align='center' class="<%=style5 %>" >
+        <%=list[i].getString("isQualifiedCount") %>
         </td>
          <td align='center' class="<%=style5 %>"  >
         <%=list[i].getString("labelCount") %>

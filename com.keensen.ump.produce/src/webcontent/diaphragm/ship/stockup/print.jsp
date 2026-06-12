@@ -186,13 +186,17 @@
 <script type="text/javascript">
  
 	function printPage() {
-	
-		document.getElementById('noprintdiv').style.display = "none";;
+		
+		
+		document.getElementById('noprintdiv').style.display = "none";
 		window.print();
 					
 	}
 	
 	function exportExcel(){
+	
+		var reg=/\\|\/|\?|\？|\*|\"|\“|\”|\'|\‘|\’|\<|\>|\{|\}|\[|\]|\【|\】|\：|\:|\、|\^|\$|\!|\~|\`|\|/g;
+		
 		var mytitle = '膜片备货请检单';
 		var columnArr = ['膜片卷号','膜片批次','可用长度(m)',
 		'合格长度(m)','膜片型号','初检膜通量','初检脱盐率%',
@@ -230,7 +234,7 @@
 				'<%=null == list[i].get("fSaltRejection")?"":list[i].get("fSaltRejection").toString() %>',
 				'<%=null == list[i].get("rGfdAvg")?"":list[i].get("rGfdAvg").toString() %>',
 				'<%=null == list[i].get("rSaltRejection")?"":list[i].get("rSaltRejection").toString() %>',
-				'<%=null == list[i].get("remark")?"":list[i].get("remark").toString() %>',
+				'<%=null == list[i].get("remark")?"":list[i].get("remark").toString() %>'.replace(reg,""),
 				'<%=null == list[i].get("tagNum")?"":list[i].get("tagNum").toString()  %>',
 				'<%=null == list[i].get("thickAvg")?"":list[i].get("thickAvg").toString() %>',
 				'<%=null == list[i].get("thickMin")?"":list[i].get("thickMin").toString() %>',

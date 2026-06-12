@@ -216,8 +216,8 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					//singleSelect : true,
+					//header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【元件不良记录列表】',
@@ -240,7 +240,12 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
-					}, '-', {
+					}, '-',{
+								text : '打印',
+								scope : this,
+								iconCls : 'icon-printer',
+								handler : this.onPrintBatch
+							}, '-', {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {

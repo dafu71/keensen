@@ -670,7 +670,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					text : "公司标准产品模板下载",
 					disabled : allRight != '1',
 					height : 40,
-					// hidden : true,
+					hidden : true,
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.onDownStd
@@ -899,6 +899,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'orderNo',
+						width : 150,
 						header : '销售订单编号',
 						sortable : true
 					}, {
@@ -1387,9 +1388,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'labelSnRuleApoint',
 						header : '客户是否指定标签序列号编码规则'
-					}, {
-						dataIndex : 'sealPosition2',
-						header : 'Y型圈距卡口端面的距离为____mm±1mm'
 					}, {
 						dataIndex : 'pipeLink',
 						header : '中心管连接适配器配备要求'
@@ -3620,6 +3618,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							name : 'entity/packingTxt',
 							dataIndex : 'packingTxt',
+							ref:'../../packingTxt',
 							anchor : '100%',
 							colspan : 12,
 							xtype : 'textarea',
@@ -4800,6 +4799,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							fieldLabel : '图纸编号',
 							decimalPrecision : 0
 						}, {
+							xtype : 'displayfield',
+							dataIndex : 'specNameLabel',
+							fieldLabel : '标签型号',
+							ref : '../../specNameLabel',
+							//labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}/*, {
 							xtype : 'combobox',
 							forceSelection : true,
 							readOnly : true,
@@ -4815,7 +4821,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							store : this.labelDrawingSpecNameStore,
 							displayField : "specName",
 							valueField : "specName"
-						}, {
+						}*/, {
 							dataIndex : 'labelDrawingUrl',
 							anchor : '100%',
 							colspan : 6,

@@ -23,38 +23,6 @@
             <xs:element minOccurs="0" name="fnumber" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="KsBaseK3BomHead">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fbomnumber" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fversion" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fstatusEnum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fcheckerStatus" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fnumber" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fname" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fmodel" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fauxPropIdEnum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="ferPclsIdEnum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fqty" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="funitname" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fbillNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="froutingName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fyield" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fnote" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fpdmimportDate" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="hasSourceMaterial" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fitemId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="finterId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fbomskipEnum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="lastUpdateName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fenterTime" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="lastUseName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fusedate" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="KsBaseK3BomList">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -146,6 +114,39 @@
             <xs:element minOccurs="0" name="parentMaterialName" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="bomGroupName" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="parentFmodel" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsBaseK3BomHead">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbomnumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fversion" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fstatusEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fcheckerStatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fmodel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fauxPropIdEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ferPclsIdEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fqty" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="funitname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbillNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="froutingName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fyield" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnote" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fpdmimportDate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hasSourceMaterial" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fitemId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="finterId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbomskipEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastUpdateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fenterTime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastUseName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fusedate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fparentId" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

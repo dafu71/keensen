@@ -1275,6 +1275,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTakeSample = function() {
 			}
 		});
 		this.defectSampleWindow.show();
+		this.defectSampleWindow.tumoBatchNo = tumoBatchNo;
+		this.defectSampleWindow.tumoBatchId = tumoBatchId;
 		this.addDefectSampleWindow.show();
 		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
 		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
@@ -1283,8 +1285,22 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTakeSample = function() {
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddSample = function() {
-	var A = this.listPanel;
-	if (!A.getSelectionModel().getSelected()) {
+	
+	var tumoBatchNo = this.defectSampleWindow.tumoBatchNo;
+	var tumoBatchId = this.defectSampleWindow.tumoBatchId;
+	
+	if(Ext.isEmpty(tumoBatchNo) || Ext.isEmpty(tumoBatchId)){
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择膜片批次！")
+	}else{
+		this.addDefectSampleWindow.show();
+		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
+		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
+		this.addDefectSampleWindow.recorder.setValue(uname);
+	}
+	
+	
+	/*var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {		
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var C = A.getSelectionModel().getSelections();
@@ -1296,7 +1312,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddSample = function() {
 		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
 		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
 		this.addDefectSampleWindow.recorder.setValue(uname);
-	}
+	}*/
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModify = function() {
@@ -2056,6 +2072,11 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddColorb = function() {
 		this.colorbWindow.loadData(cell);
 
 	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onDelSample = function() {
+	
+	this.listPanel4defectSample.onDel();
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {

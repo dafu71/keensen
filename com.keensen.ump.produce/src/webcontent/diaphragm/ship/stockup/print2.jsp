@@ -201,7 +201,7 @@
  
 	function printPage() {
 	
-		document.getElementById('noprintdiv').style.display = "none";;
+		document.getElementById('noprintdiv').style.display = "none";
 		window.print();
 					
 	};
@@ -245,7 +245,7 @@
 				'<%=null == list[i].get("fSaltRejection")?"":list[i].get("fSaltRejection").toString() %>',
 				'<%=null == list[i].get("rGfdAvg")?"":list[i].get("rGfdAvg").toString() %>',
 				'<%=null == list[i].get("rSaltRejection")?"":list[i].get("rSaltRejection").toString() %>',
-				'<%=null == list[i].get("remark")?"":list[i].get("remark").toString() %>',
+				'<%=null == list[i].get("remark")?"":list[i].get("remark").toString() %>'.replace(reg,""),
 				'<%=null == list[i].get("tagNum")?"":list[i].get("tagNum").toString()  %>',
 				'<%=null == list[i].get("thickAvg")?"":list[i].get("thickAvg").toString() %>',
 				'<%=null == list[i].get("thickMin")?"":list[i].get("thickMin").toString() %>',

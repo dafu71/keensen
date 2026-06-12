@@ -16,6 +16,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.initProduceCountWindow();
 		
 		this.initEditDefectWindow();
+		
+		this.initDegradeWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -26,6 +28,36 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	}
 
 	this.initStore = function() {
+		
+		this.dryWetStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['干膜', '干膜'], ['湿膜', '湿膜']]
+				});
+
+		this.colorTapeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['水光蓝', '水光蓝'], ['蓝', '蓝'], ['绿', '绿'], ['灰', '灰'],
+							['黄', '黄'], ['白', '白'], ['黑', '黑']]
+				});
+				
+		this.describeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [
+							['气检NG水测不合格', '气检NG水测不合格'],
+							['后端面胶水不良', '补胶后端面胶水'],
+							['端面不良(膜片打折)',
+									'端面不良(膜片打折)'],
+							['端面不良(浓网打折)',
+									'端面不良(浓网打折)'],
+							['端面不良(淡网打折)',
+									'端面不良(淡网打折)'],
+							['端面不良(端面不平)',
+									'端面不良(端面不平)'],
+							['中心管不良(来料)', '中心管不良(来料)'],
+							['中心管不良(制程)', '中心管不良(制程)'],
+							['膜体长度异常', '膜体长度异常'],
+							['湿膜入库', '湿膜入库']]
+				});
 
 		this.jmWorkerStore = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.produce.component.produce.queryJmWorker.biz.ext',
@@ -65,9 +97,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					height : 180,
 					columns : 3,
 					border : true,
-					collapsible : true,
+					collapsible : false,
 					titleCollapse : false,
-					// title : '【BOM查询】',
+					title : '&nbsp;',
 					fields : [{
 								xtype : 'datetimefield',
 								name : 'condition/orderDateStart',
@@ -195,7 +227,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【BOM列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [{
@@ -231,6 +263,12 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						value : '',
 						id : 'householdjmamount'
 					}, '->', {
+								text : '元件降级',
+								scope : this,
+								hidden : degradeLimit != "1",
+								iconCls : 'icon-application_edit',
+								handler : this.onDegrade
+							},'-', {
 								text : '元件不良录入',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -274,6 +312,14 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					}, {
 						dataIndex : 'numPerWad',
 						header : '膜页数'
+					}, {
+						header : '下料尺寸(m)',
+						width : 90,
+						dataIndex : 'blankingSize'
+					}, {
+						header : '页宽(m)',
+						width : 60,
+						dataIndex : 'pageWidth'
 					}, {
 						dataIndex : 'denseNet',
 						header : '浓网mil'
@@ -360,6 +406,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							name : 'totalAmount'
 						}, {
 							name : 'defectLength'
+						}, {
+							name : 'pageWidth'
+						}, {
+							name : 'blankingSize'
 						}]
 			})
 		})
@@ -646,8 +696,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							height : 5,
 							colspan : 2
 						}, {
-							xtype : 'datefield',
-							format : "Y-m-d",
+							xtype : 'textfield',
+							//format : "Y-m-d",
 							dataIndex : 'orderDate',
 							ref : '../../orderDate',
 							fieldLabel : '卷膜日期',
@@ -991,7 +1041,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	
 	this.initEditDefectWindow = function() {
 
-		var _this = this;
+		var _this = this;	
+		
 
 		this.firstStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -1015,6 +1066,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					delUrl : '111.biz.ext',
 					columns : [new Ext.grid.RowNumberer(), selModel4EditDefect,
 							{
+								dataIndex : 'tache',
+								header : '录入工序'
+							},
+							{
 								dataIndex : 'first',
 								header : '一级目录'
 							}, {
@@ -1027,15 +1082,15 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 								dataIndex : 'fourth',
 								header : '四级目录'
 							}, {
-								dataIndex : 'length',
-								header : '不良长度(米)',
+								dataIndex : 'numDefect',
+								header : '不良只数',
 								css : 'background:#c7c7c7;',
 								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 										{
 											allowBlank : false,
 											scope : this,
 											allowNegative : false,
-											decimalPrecision : 3,
+											decimalPrecision : 0,
 											minValue : 0,
 											listeners : {
 												'specialkey' : function() {
@@ -1047,11 +1102,14 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 														return false;
 													var defectId = _this.rec.data['defectId'];
 													_this.saveJmDefect(
-															defectId, 'length',
+															defectId, 'numDefect',
 															newValue, oldValue);
 												}
 											}
 										}))
+							}, {
+								dataIndex : 'length',
+								header : '不良长度(米)'
 							}],
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.produce.quality.defect.queryProdDefect4Jm.biz.ext',
@@ -1061,7 +1119,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						autoScroll : true,
 						clicksToEdit : 1,
 						baseParams : {
-							'condition/tache' : '卷膜'
+							'condition/tache' : "'卷膜','切边','气检','包装','水测'"
 						},
 						fields : [{
 									name : 'defectId'
@@ -1077,6 +1135,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 									name : 'length'
 								}, {
 									name : 'tacheCause'
+								}, {
+									name : 'tache'
+								}, {
+									name : 'numDefect'
 								}]
 					})
 				})
@@ -1128,7 +1190,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 								fieldLabel : '四级目录%-%'
 							}, {
 								xtype : 'hidden',
-								value : '卷膜',
+								value : "'卷膜','切边','气检','包装','水测'",
 								ref : '../tache',
 								name : 'condition/tache'
 							}]
@@ -1146,6 +1208,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.editDefectWindow = this.editDefectWindow || new Ext.Window({
 					title : '元件不良录入',
 					relationId : '',// 关联的卷膜记录ID
+					numPerWad:'',//每支页数
+					blankingSize:'',//下料尺寸(m)'
+					pageWidth:'',//页宽(m)					
+					
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
@@ -1153,12 +1219,257 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					buttonAlign : "center",
 					autoScroll : false,
 					modal : true,
-					width : 820,
+					width : 1024,
 					height : 600,
 					layout : 'border',
 					items : [this.queryPanel4EditDefect,
 							this.listPanel4EditDefect]
 
 				});
+	}
+	
+	this.initDegradeWindow = function() {
+
+		var _this = this;
+		var amountId = Ext.id();
+
+		this.quantityField = this.quantityField || new Ext.Container({
+					autoEl : 'div',
+					layout : 'column',
+					anchor : "95%",
+					colspan : 1,
+					fieldLabel : '数量(支)<font color=red>*</font>',
+					defaults : {
+						xtype : "container",
+						autoEl : "div",
+						anchor : "100%"
+					},
+					items : [{
+								columnWidth : 0.55,
+								anchor : "100%",
+								layout : "anchor",
+								id : amountId,
+								xtype : 'numberfield',
+								allowBlank : false,
+								dataIndex : 'amount',
+								name : 'entity/amount'
+							}, {
+								columnWidth : 0.45,
+								anchor : "100%",
+								layout : "anchor",
+								text : '计算膜片长度',
+								xtype : 'button',
+								handler : function() {
+									var obj = Ext.getCmp(amountId);
+									var value = obj.getValue()
+									if (!Ext.isEmpty(value)) {
+										_this.onCalc(value);
+									}
+								}
+
+							}]
+				});
+
+		this.degradeWindow = this.degradeWindow || new Ext.fn.FormWindow({
+			title : '元件降级',
+			height : 600,
+			width : 800,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+				xtype : 'inputpanel',
+				autoHide : false,
+				successFn : function() {
+					_this.listPanel.store.load();
+					//_this.degradeWindow.items.items[0].form.reset();
+					Ext.getCmp(amountId).setValue('');
+					_this.degradeWindow.blankingSize.setValue('');
+					_this.degradeWindow.describe.setValue('');
+					
+					
+				},
+				pgrid : this.listPanel,
+				columns : 2,
+				saveUrl : 'com.keensen.ump.produce.component.household.saveDegrade.biz.ext',
+				fields : [{
+							xtype : 'prodspeccombobox',
+							allowBlank : false,
+							readOnly:true,
+							hiddenName : 'entity/prodSpecId',
+							valueField : "id",
+							displayField : "name",
+							ref : '../../prodSpecId',
+							fieldLabel : '卷膜执行型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/labelSpecName',
+							// allowBlank : false,
+							ref : '../../labelSpecName',
+							fieldLabel : '贴标型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/batchNo',
+							ref : '../../batchNo',
+							allowBlank : false,
+							readOnly:true,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1
+						}, this.quantityField, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							ref : '../../orderNo',
+							readOnly:true,
+							fieldLabel : '订单号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/blankingSize',
+							ref : '../../blankingSize',
+							allowBlank : false,
+							fieldLabel : '膜片长度(m)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '胶带颜色',
+							ref : '../../colorTape',
+							hiddenName : 'entity/colorTape',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.colorTapeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.colorTape.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '规格',
+							ref : '../../dryWet',
+							hiddenName : 'entity/dryWet',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.dryWetStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.dryWet.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/orderDate',
+							ref:'../../orderDate',
+							allowBlank : false,
+							readOnly:true,
+							fieldLabel : '工单日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/judgeDate',
+							ref:'../../judgeDate',
+							allowBlank : false,
+							readOnly:true,
+							fieldLabel : '判定日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '卷膜机台',
+							ref : '../../machineCode',
+							hiddenName : 'entity/machineCode',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							readOnly:true,
+							allowBlank : false,
+							store : this.machineCodeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.machineCode.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/jmName',
+							ref:'../../jmName',
+							readOnly:true,
+							allowBlank : false,
+							fieldLabel : '卷制人员',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '不良描述',
+							ref : '../../describe',
+							hiddenName : 'entity/describe',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.describeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.degradeWindow.describe.reset()
+								}
+							}
+						}]
+			}]
+		});
 	}
 }

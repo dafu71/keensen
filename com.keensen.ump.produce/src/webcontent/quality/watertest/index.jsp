@@ -48,6 +48,8 @@
   var uid = "<%=uid %>";
   var mylistid = Ext.id();
   
+  var opt = '';
+  
   var hwatertestExportButton = Ext.id();
   
   FunctionMgr.load({ 

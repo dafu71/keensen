@@ -131,7 +131,11 @@
   LEFT JOIN QINSEN.PARA_MATER_SPEC T2
     ON T1.MATER_SPEC_ID = T2.MATER_SPEC_ID
    	WHERE 1 = 1
-	<isNotNull prepend="and" property="id">T.id = #id#</isNotNull>
+   	
+   	
+   	<isNotNull prepend="and" property="createTimeStart">TO_CHAR(T1.create_time, 'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">TO_CHAR(T1.create_time, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T.id = #id#</isNotNull>
         <isNotNull prepend="and" property="workshop">T1.WORKSHOP = #workshop#</isNotNull>
         <isNotNull prepend="and" property="invalidDtStart">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &gt;=  #invalidDtStart#</isNotNull>
         <isNotNull prepend="and" property="invalidDtEnd">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &lt;=  #invalidDtEnd#</isNotNull>

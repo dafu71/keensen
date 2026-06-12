@@ -10,8 +10,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link6</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link6</targetConnections>
     <location x="561" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -99,10 +99,6 @@
       <process:from type="literal" pattern="reference">玻璃钢表面光洁平整,无裂纹、凹陷、变形等缺陷</process:from>
       <process:to type="query">data/appearance</process:to>
     </process:copy>
-    <process:copy>
-      <process:from type="literal" pattern="reference">玻璃钢表面光洁平整,无裂纹、凹陷、变形</process:from>
-      <process:to type="query">data/appearanceCheck</process:to>
-    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="114" y="292"/>
@@ -114,8 +110,8 @@
       <sourceNode>assign2</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link5</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link5</targetConnections>
     <location x="555" y="256"/>
     <size height="28" width="28"/>
     <nodeLabel>assign2label</nodeLabel>

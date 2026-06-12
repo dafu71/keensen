@@ -137,6 +137,6 @@
     </select>
     
     <select id="queryYmd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    select t.ymd "ymd" from V_KS_YMD t    
+    select t.ymd <!--|| to_char(SYSDATE,'hhmm')--> "ymd" from V_KS_YMD t    
     </select>
 </sqlMap>

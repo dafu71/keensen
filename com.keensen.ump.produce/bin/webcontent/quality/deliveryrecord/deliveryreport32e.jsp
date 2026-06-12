@@ -118,7 +118,7 @@
 <table width="780" border="0">
 	<tr>
 		<td width="100%" height="47">
-		<div align="center" class="style3"><strong>Product Test Report</strong></div>
+		<div align="center" class="style3"><strong>Product Test Report & Certificate of Conformance</strong></div>
 		</td>
 	</tr>
 </table>

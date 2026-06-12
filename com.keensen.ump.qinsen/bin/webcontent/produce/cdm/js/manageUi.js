@@ -84,9 +84,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					height : 200,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					collapsible : false,
 					titleCollapse : false,
-					// title : '【裁叠膜记录查询】',
+					title : '&nbsp;',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceBeginDate',
@@ -442,7 +442,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								var batchNo = r.get('batchNo');
 								var style = "<a style='text-decoration:none'";
 								var str = style
-										+ " href='javascript:defectView2("
+										+ " href='javascript:defectView22("
 										+ Ext.encode(relationId) + ","
 										+ Ext.encode(batchNo) + ");'>" + v
 										+ "</a>";

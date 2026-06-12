@@ -183,7 +183,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			id : listid,
@@ -218,11 +218,17 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						iconCls : 'icon-printer',
 						handler : this.onMarkPrint
 					}, '-', {
-						text : '拍照查看',
+						text : '请检拍照',
 						hidden : uid != 'dafu',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onViewPhotos
+					}, '-', {
+						text : '品管拍照',
+						//hidden : uid != 'dafu',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewCheckPhotos
 					}, '->', {
 						text : '确认入C仓',
 						scope : this,
@@ -243,11 +249,13 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								width : 30
 							}), selModel, {
 						dataIndex : 'code',
+						width:120,
 						sortable : true,
 						header : '栈板号'
 					}, {
 						dataIndex : 'reserve1',
 						sortable : true,
+						width:120,
 						header : '订单号'
 					}, {
 						dataIndex : 'orderType',
@@ -295,6 +303,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					}, {
 						dataIndex : 'createTime',
 						sortable : true,
+						width:150,
 						header : '请检时间'
 					}, {
 						xtype : 'dictcolumn',
@@ -2263,6 +2272,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						ref : '../pkid',
 						name : 'id',
 						dataIndex : 'id'
+					}, {
+						xtype : 'hidden',
+						ref : '../orderId',
+						dataIndex : 'orderId'
 					}],
 			buttons : [{
 						text : "重新生成箱唛批号",

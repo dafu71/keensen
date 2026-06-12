@@ -13,9 +13,27 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				this.editWindow.show();
-				this.editWindow.loadData(cell);
-			}, this);
+
+		if (this.opt == 'degrade') {
+
+			this.degradeWindow.prodSpecId.setValue(cell.get('testSpecId'));
+			this.degradeWindow.labelSpecName.setValue(cell.get('testSpecName'));
+			this.degradeWindow.batchNo.setValue(cell.get('batchNo'));
+			//this.degradeWindow.orderNo.setValue(cell.get('orderNo'));
+			//this.degradeWindow.orderDate.setValue(cell.get('orderDate').substring(0, 10));
+			this.degradeWindow.judgeDate.setValue(new Date());
+			this.degradeWindow.jmName.setValue(cell.get('jName'));
+			//this.degradeWindow.machineCode.setValue(Ext.isEmpty(cell
+			//		.get('machineName')) ? '-' : cell.get('machineName')
+			//		.replace(/\D/g, '').trim()
+			//		+ '#');
+			this.degradeWindow.show();
+			return;
+		}
+		
+		this.editWindow.show();
+		this.editWindow.loadData(cell);
+	}, this);
 
 	// 修改加载数据后事件
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
@@ -42,6 +60,11 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.onEdit = function() {
 
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
+}
+
+com.keensen.ump.produce.quality.WaterTestMgr.prototype.onDegrade = function() {
+	this.opt = 'degrade';
+	this.listPanel.onEdit();
 }
 
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.getGpd = function() {
@@ -156,7 +179,7 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.dealCdmBatchNo = function
 }
 
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.onAddBySn = function() {
-	
+
 	Ext.Msg.prompt("新增复测", "请输入序号", function(btn, text) {
 				if (btn == 'ok' && !Ext.isEmpty(text)) {
 					var sn = text.trim();
@@ -171,8 +194,33 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.onAddBySn = function() {
 			}, this, false, "");
 }
 
+com.keensen.ump.produce.quality.WaterTestMgr.prototype.onCalcLength = function(
+		v) {
+	var obj = this.degradeWindow;
+	var prodSpec = obj.prodSpecId;
+	var prodSpecId = prodSpec.getValue();
+	if (Ext.isEmpty(prodSpecId)) {
+		Ext.Msg.alert("系统提示", "请选择卷膜执行型号!");
+		return false;
+	}
+
+	var store = prodSpec.store;
+	var i = store.find('id', prodSpecId);
+	if (i == -1) {
+		Ext.Msg.alert("系统提示", "没有匹配到数据!");
+		return false;
+	}
+	var rec = store.getAt(i);
+	var blankingSize2 = rec.get('blankingSize');
+	var numPerWad = rec.get('numPerWad');
+	var pageWidth = rec.get('pageWidth');
+
+	var blankingSize = roundToDecimalPlace(numPerWad * pageWidth * blankingSize2 * v, 2);
+	obj.blankingSize.setValue(blankingSize);
+
+}
 function roundToDecimalPlace(number, decimalPlaces) {
-	
+
 	const factor = Math.pow(10, decimalPlaces);
 	return Math.round(number * factor) / factor;
 }
@@ -180,5 +228,5 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.exportExcel = function() 
 
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '记录',
 			'com.keensen.ump.produce.quality.hwatertest.queryWaterTest', '0,1');
-	
+
 }

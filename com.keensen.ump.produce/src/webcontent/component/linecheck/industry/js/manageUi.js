@@ -461,6 +461,13 @@ com.keensen.ump.produce.component.linecheck.IndustryMgr = function() {
 		})
 
 		this.editPanel.addButton({
+					text : "品管拍照",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onViewCheckPhotos
+				});
+				
+		this.editPanel.addButton({
 					text : "保存",
 					scope : this,
 					iconCls : 'icon-application_edit',
