@@ -52,6 +52,8 @@
 <js:load scriptPath="produce/component/storage/report/js/notorderUi2.js" />
 <js:load scriptPath="produce/component/storage/report/js/notorderEv2.js" />
 <script type="text/javascript">
+
+
   var uid = "<%=uid %>";
   var listid = Ext.id();
   var listid3 = Ext.id();
@@ -62,8 +64,10 @@
   
   var opt = '';
   FunctionMgr.load({ 
-			mainfn:com.keensen.ump.produce.component.storage.Report4NotOrderMgr2
+			mainfn:com.keensen.ump.produce.component.storage.Report4NotOrder2Mgr
 		});
+
+		
  </script>
 </head>
 <body>

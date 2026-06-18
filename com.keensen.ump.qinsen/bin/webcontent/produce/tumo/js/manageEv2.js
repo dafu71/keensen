@@ -727,12 +727,13 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAdd = function() {
 		this.inputWindow.workerId.setValue(staffId);
 	}
 	if (!Ext.isEmpty(teamId)) {
-		//this.inputWindow.items.items[0].form.findField('entity/teamId')
-				//.setValue(teamId);
+		// this.inputWindow.items.items[0].form.findField('entity/teamId')
+		// .setValue(teamId);
 	}
-	
-	this.inputWindow.items.items[0].form.findField('entity/teamId').setValue('');
-	
+
+	this.inputWindow.items.items[0].form.findField('entity/teamId')
+			.setValue('');
+
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.show();
 
@@ -1285,34 +1286,30 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTakeSample = function() {
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddSample = function() {
-	
+
 	var tumoBatchNo = this.defectSampleWindow.tumoBatchNo;
 	var tumoBatchId = this.defectSampleWindow.tumoBatchId;
-	
-	if(Ext.isEmpty(tumoBatchNo) || Ext.isEmpty(tumoBatchId)){
+
+	if (Ext.isEmpty(tumoBatchNo) || Ext.isEmpty(tumoBatchId)) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择膜片批次！")
-	}else{
+	} else {
 		this.addDefectSampleWindow.show();
 		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
 		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
 		this.addDefectSampleWindow.recorder.setValue(uname);
 	}
-	
-	
-	/*var A = this.listPanel;
-	if (!A.getSelectionModel().getSelected()) {		
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
-	} else {
-		var C = A.getSelectionModel().getSelections();
-		var r = C[0];
-		var tumoBatchNo = r.data.batchNo;
-		var tumoBatchId = r.data.recordId;
 
-		this.addDefectSampleWindow.show();
-		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
-		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
-		this.addDefectSampleWindow.recorder.setValue(uname);
-	}*/
+	/*
+	 * var A = this.listPanel; if (!A.getSelectionModel().getSelected()) {
+	 * Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！") } else { var C =
+	 * A.getSelectionModel().getSelections(); var r = C[0]; var tumoBatchNo =
+	 * r.data.batchNo; var tumoBatchId = r.data.recordId;
+	 * 
+	 * this.addDefectSampleWindow.show();
+	 * this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
+	 * this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
+	 * this.addDefectSampleWindow.recorder.setValue(uname); }
+	 */
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModify = function() {
@@ -2075,8 +2072,85 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddColorb = function() {
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onDelSample = function() {
-	
+
 	this.listPanel4defectSample.onDel();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onUploadDefectPicture = function() {
+
+	var A = this.listPanel;
+	var batchNo;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		batchNo = r.data.batchNo;
+	}
+
+	this.uploadDefectWin.getComponent('uploadForm').getForm().reset();
+	this.uploadDefectWin.show();
+	this.uploadDefectWin.batchNo.setValue(batchNo);
+}
+
+// 上传照片
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.doUploadDefect = function() {
+
+	var _this = this;
+	var uploadInputPanel = this.uploadDefectWin.getComponent('uploadForm');
+	// 校验
+	var fileUploadObj = uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	var filePath = fileUploadObj.getValue();
+	// 文件后缀
+	var sfileName = filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (uploadInputPanel.form.isValid()) {
+
+		var url = 'com.keensen.ump.qinsen.uploadDefect.flow';
+		uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+
+						if (result.success) {
+
+							Ext.Msg.alert("系统提示", "上传成功", function() {
+										_this.uploadDefectWin.hide();
+										_this.listPanel.store.reload({});
+									});
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {
@@ -2101,7 +2175,7 @@ function viewWaterLiquid(recordId) {
 }
 
 // 显示模态窗口函数
-function showImageModal(defectPicture,width,height) {
+function showImageModal(defectPicture, width, height) {
 	// 创建模态窗口
 	var src = markRootUrl + defectPicture + '?ver=' + Math.random();
 	var win = new Ext.Window({

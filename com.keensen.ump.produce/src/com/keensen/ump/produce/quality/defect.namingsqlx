@@ -859,6 +859,10 @@
   FROM KS_QUALITY_prod_DEFECT T1
 	where 1=1
 	
+	<isNotNull prepend="and" property="tache2"> 
+		       T1.tache = #tache2#
+	</isNotNull>
+	
 	<isNotNull prepend="and" property="tache"> 
 		       T1.tache in ($tache$)
 	</isNotNull>

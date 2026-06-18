@@ -52,6 +52,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.initColorbWindow();
 
+		this.buildUploadDefectWin();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					batchNoControl : true,
@@ -699,6 +701,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'displayfield',
 						value : 'C72报废合计(kg):',
 						id : 'c72invalidtotal'
+					}, '->', {
+						text : '瑕疵图片上传',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						// hidden : modifyFlag != 1,
+						handler : this.onUploadDefectPicture
 					}],
 			hsPage : true,
 			id : 'produce-tumo-list',
@@ -3152,10 +3160,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.defectSampleWindow = this.defectSampleWindow || new Ext.Window({
 					title : '膜片取样',
-					
-					tumoBatchNo:'',
-					tumoBatchId:'',
-					
+
+					tumoBatchNo : '',
+					tumoBatchId : '',
+
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
@@ -6111,4 +6119,47 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 	}
 
+	// 上传面板
+	this.buildUploadDefectWin = function() {
+
+		var _this = this;
+		this.uploadDefectWin = new Ext.Window({
+					title : '上传瑕疵图',
+					collapsible : false,
+					modal : true,
+					closeAction : 'hide',
+					buttonAlign : 'center',
+					layout : 'fit',
+					width : 480,
+					height : 120,
+					items : [{
+								xtype : 'columnform',
+								itemId : 'uploadForm',
+								saveUrl : 'com.keensen.ump.qinsen.uploadDefect.flow',
+								columns : 1,
+								fileUpload : true,
+								fields : [{
+											name : 'uploadFile',
+											fieldLabel : '选择文件',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'hidden',
+											name : 'batchNo',
+											ref : '../../batchNo'
+										}]
+							}],
+					buttons : [{
+								text : '上传',
+								handler : this.doUploadDefect,
+								scope : this
+							}, {
+								text : '关闭',
+								scope : this,
+								handler : function() {
+									this.uploadDefectWin.hide();
+								}
+							}]
+				});
+	}
 }

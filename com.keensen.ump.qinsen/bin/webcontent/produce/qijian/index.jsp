@@ -22,6 +22,10 @@
     //10001481
     int modifyPrintBatchNo = roleId.indexOf("10001481")>-1?1:0;
     
+    if(uid.equals("KS00141")||uid.equals("KS00524")) {
+    		modifyPrintBatchNo = 1;
+    	}
+    
     //10001981  元件报废申请
   	 int abilitionAdd = roleId.indexOf("10001981")>-1?1:0;
   	 
@@ -33,8 +37,8 @@
     	if(uid.equals("KS00141")||uid.equals("KS00524") ||uid.equals("KS01479")){
     		modifyOrderNoFlag4Wet = 1;
     	}
-    	//气检干膜贴标,罗海鹰、任栋、吴敏、袁娜
-		if(uid.equals("LHY")||uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("dafu")||uid.equals("KS01441") ||uid.equals("KS01479")){   		
+    	//气检干膜贴标,任栋、吴敏、袁娜
+		if(uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("dafu")||uid.equals("KS01441") ||uid.equals("KS01479")){   		
     		modifyOrderNoFlag4Dry = 1;
     	}
     }

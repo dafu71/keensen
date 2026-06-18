@@ -8,4 +8,18 @@
 	#defectPicture# FROM dual
 	WHERE NOT EXISTS(SELECT 1 FROM KS_DIAPHGRAM_DEFECT_PICTURE t2
 	WHERE t2.batch_no = REGEXP_SUBSTR(#defectPicture#, '[^_]+', 1, 1))</insert>
+    <update id="updateDefectPicture2" parameterClass="java.util.HashMap">update KS_DIAPHGRAM_DEFECT_PICTURE
+    set picture_name = #defectPicture#,
+    update_user_id = #userId#,
+    update_name = #userName#,
+    update_time = sysdate
+	where batch_no = #batchNo#</update>
+    <insert id="insertDefectPicture2" parameterClass="java.util.HashMap">INSERT INTO KS_DIAPHGRAM_DEFECT_PICTURE
+	(id,create_time,create_user_id,create_name,batch_no,picture_name)
+	SELECT SEQU_DIAPHGRAM_DEFECT_PICTURE.Nextval,sysdate,
+	#userId#,#userName#,
+	#batchNo#,
+	#defectPicture# FROM dual
+	WHERE NOT EXISTS(SELECT 1 FROM KS_DIAPHGRAM_DEFECT_PICTURE t2
+	WHERE t2.batch_no = #batchNo#)</insert>
 </sqlMap>

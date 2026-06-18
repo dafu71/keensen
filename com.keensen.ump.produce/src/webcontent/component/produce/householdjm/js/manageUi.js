@@ -1,6 +1,6 @@
 com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	this.initPanel = function() {
-		
+
 		this.rec = {};
 
 		this.currentMachineCode = '';
@@ -14,9 +14,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.initViewWindow();
 
 		this.initProduceCountWindow();
-		
+
 		this.initEditDefectWindow();
-		
+
 		this.initDegradeWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -28,7 +28,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	}
 
 	this.initStore = function() {
-		
+
 		this.dryWetStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['干膜', '干膜'], ['湿膜', '湿膜']]
@@ -39,23 +39,16 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					data : [['水光蓝', '水光蓝'], ['蓝', '蓝'], ['绿', '绿'], ['灰', '灰'],
 							['黄', '黄'], ['白', '白'], ['黑', '黑']]
 				});
-				
+
 		this.describeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [
-							['气检NG水测不合格', '气检NG水测不合格'],
-							['后端面胶水不良', '补胶后端面胶水'],
-							['端面不良(膜片打折)',
-									'端面不良(膜片打折)'],
-							['端面不良(浓网打折)',
-									'端面不良(浓网打折)'],
-							['端面不良(淡网打折)',
-									'端面不良(淡网打折)'],
-							['端面不良(端面不平)',
-									'端面不良(端面不平)'],
+					data : [['气检NG水测不合格', '气检NG水测不合格'], ['后端面胶水不良', '补胶后端面胶水'],
+							['端面不良(膜片打折)', '端面不良(膜片打折)'],
+							['端面不良(浓网打折)', '端面不良(浓网打折)'],
+							['端面不良(淡网打折)', '端面不良(淡网打折)'],
+							['端面不良(端面不平)', '端面不良(端面不平)'],
 							['中心管不良(来料)', '中心管不良(来料)'],
-							['中心管不良(制程)', '中心管不良(制程)'],
-							['膜体长度异常', '膜体长度异常'],
+							['中心管不良(制程)', '中心管不良(制程)'], ['膜体长度异常', '膜体长度异常'],
 							['湿膜入库', '湿膜入库']]
 				});
 
@@ -263,17 +256,17 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						value : '',
 						id : 'householdjmamount'
 					}, '->', {
-								text : '元件降级',
-								scope : this,
-								hidden : degradeLimit != "1",
-								iconCls : 'icon-application_edit',
-								handler : this.onDegrade
-							},'-', {
-								text : '元件不良录入',
-								scope : this,
-								iconCls : 'icon-application_add',
-								handler : this.onAddDefect
-							}],
+						text : '元件降级',
+						scope : this,
+						hidden : degradeLimit != "1",
+						iconCls : 'icon-application_edit',
+						handler : this.onDegrade
+					}, '-', {
+						text : '元件不良录入',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAddDefect
+					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.produce.deleteHouseholdJm.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
@@ -522,7 +515,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'combo',
 							fieldLabel : '操作机台',
 							allowBlank : false,
-							readOnly:true,
+							readOnly : true,
 							mode : 'local',
 							anchor : '95%',
 							colspan : 2,
@@ -697,7 +690,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							//format : "Y-m-d",
+							// format : "Y-m-d",
 							dataIndex : 'orderDate',
 							ref : '../../orderDate',
 							fieldLabel : '卷膜日期',
@@ -911,16 +904,16 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						forceFit : true
 					},
 					tbar : ['->', {
-						xtype : 'displayfield',
-						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
-					}, {
-						xtype : 'displayfield',
-						value : '',
-						id : quantityTotalId
-					}, {
-						xtype : 'displayfield',
-						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
-					}],
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '',
+								id : quantityTotalId
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}],
 					hsPage : true,
 					selModel : selModel4ProduceCount,
 					delUrl : '1.biz.ext',
@@ -1038,11 +1031,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 
 				});
 	}
-	
+
 	this.initEditDefectWindow = function() {
 
-		var _this = this;	
-		
+		var _this = this;
 
 		this.firstStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -1068,8 +1060,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							{
 								dataIndex : 'tache',
 								header : '录入工序'
-							},
-							{
+							}, {
 								dataIndex : 'first',
 								header : '一级目录'
 							}, {
@@ -1102,7 +1093,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 														return false;
 													var defectId = _this.rec.data['defectId'];
 													_this.saveJmDefect(
-															defectId, 'numDefect',
+															defectId,
+															'numDefect',
 															newValue, oldValue);
 												}
 											}
@@ -1145,13 +1137,13 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 
 		this.queryPanel4EditDefect = this.queryPanel4EditDefect
 				|| new Ext.fn.QueryPanel({
-							height : 70,
-							columns : 4,
-							border : true,
-							region : 'north',
-							// collapsible : true,
-							titleCollapse : false,
-							fields : [{
+					height : 110,
+					columns : 4,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					fields : [{
 								xtype : 'combobox',
 								mode : 'local',
 								fieldLabel : '一级目录',
@@ -1193,8 +1185,41 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 								value : "'卷膜','切边','气检','包装','水测'",
 								ref : '../tache',
 								name : 'condition/tache'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'radiogroup',
+								columns : 5,
+								name : 'tache2',
+								ref : '../tache2',
+								fieldLabel : '录入工序',
+								anchor : '90%',
+								items : [{
+											boxLabel : '卷膜',
+											name : 'condition/tache2',
+											inputValue : '卷膜'
+										}, {
+											boxLabel : '切边',
+											name : 'condition/tache2',
+											inputValue : '切边'
+										}, {
+											boxLabel : '气检',
+											name : 'condition/tache2',
+											inputValue : '气检'
+										}, {
+											boxLabel : '包装',
+											name : 'condition/tache2',
+											inputValue : '包装'
+										}, {
+											boxLabel : '水测',
+											name : 'condition/tache2',
+											inputValue : '水测'
+										}],
+								colspan : 2
 							}]
-						});
+				});
 
 		this.queryPanel4EditDefect.addButton({
 					text : "关闭",
@@ -1208,10 +1233,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.editDefectWindow = this.editDefectWindow || new Ext.Window({
 					title : '元件不良录入',
 					relationId : '',// 关联的卷膜记录ID
-					numPerWad:'',//每支页数
-					blankingSize:'',//下料尺寸(m)'
-					pageWidth:'',//页宽(m)					
-					
+					numPerWad : '',// 每支页数
+					blankingSize : '',// 下料尺寸(m)'
+					pageWidth : '',// 页宽(m)
+
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
@@ -1227,7 +1252,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 
 				});
 	}
-	
+
 	this.initDegradeWindow = function() {
 
 		var _this = this;
@@ -1284,12 +1309,11 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 				autoHide : false,
 				successFn : function() {
 					_this.listPanel.store.load();
-					//_this.degradeWindow.items.items[0].form.reset();
+					// _this.degradeWindow.items.items[0].form.reset();
 					Ext.getCmp(amountId).setValue('');
 					_this.degradeWindow.blankingSize.setValue('');
 					_this.degradeWindow.describe.setValue('');
-					
-					
+
 				},
 				pgrid : this.listPanel,
 				columns : 2,
@@ -1297,7 +1321,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 				fields : [{
 							xtype : 'prodspeccombobox',
 							allowBlank : false,
-							readOnly:true,
+							readOnly : true,
 							hiddenName : 'entity/prodSpecId',
 							valueField : "id",
 							displayField : "name",
@@ -1322,7 +1346,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							name : 'entity/batchNo',
 							ref : '../../batchNo',
 							allowBlank : false,
-							readOnly:true,
+							readOnly : true,
 							fieldLabel : '膜片批次',
 							anchor : '95%',
 							colspan : 1
@@ -1334,7 +1358,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'textfield',
 							name : 'entity/orderNo',
 							ref : '../../orderNo',
-							readOnly:true,
+							readOnly : true,
 							fieldLabel : '订单号',
 							anchor : '95%',
 							colspan : 1
@@ -1395,9 +1419,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						}, {
 							xtype : 'datefield',
 							name : 'entity/orderDate',
-							ref:'../../orderDate',
+							ref : '../../orderDate',
 							allowBlank : false,
-							readOnly:true,
+							readOnly : true,
 							fieldLabel : '工单日期',
 							anchor : '95%',
 							format : "Y-m-d",
@@ -1405,9 +1429,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						}, {
 							xtype : 'datefield',
 							name : 'entity/judgeDate',
-							ref:'../../judgeDate',
+							ref : '../../judgeDate',
 							allowBlank : false,
-							readOnly:true,
+							readOnly : true,
 							fieldLabel : '判定日期',
 							anchor : '95%',
 							format : "Y-m-d",
@@ -1426,7 +1450,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							colspan : 1,
 							emptyText : '--请选择--',
 							editable : false,
-							readOnly:true,
+							readOnly : true,
 							allowBlank : false,
 							store : this.machineCodeStore,
 							displayField : "name",
@@ -1439,8 +1463,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'entity/jmName',
-							ref:'../../jmName',
-							readOnly:true,
+							ref : '../../jmName',
+							readOnly : true,
 							allowBlank : false,
 							fieldLabel : '卷制人员',
 							anchor : '95%',

@@ -224,8 +224,9 @@
   WHERE 1=1 
   
   AND to_char(t1.create_time,'YYYY-MM-DD')&gt;='2001-12-16'
-  	
-  	<isNotNull prepend="and" property="trayCode">T1.tray_CODE = #trayCode#</isNotNull>
+  
+  <isNotNull prepend="and" property="orderNoAllocate2">T1.order_no_allocate like '%' || #orderNoAllocate2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="trayCode">T1.tray_CODE = #trayCode#</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in ($batchNoStr$)</isNotNull>
         <isNotNull prepend="and" property="storageCode">T1.STORAGE_CODE = #storageCode#</isNotNull>
         <isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
@@ -892,7 +893,7 @@ ON alct.ORDER_NO = TT.ORDER_NO
        T1.R_GPD                AS "rGpd",
        T1.R_SALT               AS "rSalt",
        T1.R_CHECK_TM           AS "rCheckTm",
-       T1.DISINFECT_TIME       AS "disinfectTime",
+       to_char(T1.DISINFECT_TIME,'YYYY-MM-DD HH24:MI:SS')       AS "disinfectTime",
        T1.DELIVERY_DATE_LATEST AS "deliveryDateLatest",
        T1.OVER_DATE            AS "overDate",
        T1.ABNORMAL             AS "abnormal",

@@ -82,7 +82,7 @@
                MSC.MATER_SPEC_CODE CDM_SPEC_CODE,msc.dense_net dense_net2,
                MSC.MATER_SPEC_NAME CDM_SPEC_NAME,
                
-                MSC.Juanmo ,MSC.light_Net_Type ,MSC.light_Net_Short_Page ,
+                MSC.Juanmo ,nvl(MSC.light_Net_Type,msc.light_net_short_type) light_Net_Type ,MSC.light_Net_Short_Page ,
                 
                <!--A.QUANTITY * A.BLANKING_SIZE * trunc(A.PAGE_WIDTH,1) * decode(nvl(a.page_type,'长页'),'长页',1,0.5) OUT_LENGTH,--><!--膜片下料裁切页宽（膜片投料计算用）-->
                A.QUANTITY * A.BLANKING_SIZE * A.mp_Width * decode(nvl(a.page_type,'长页'),'长页',1,0.5) OUT_LENGTH,

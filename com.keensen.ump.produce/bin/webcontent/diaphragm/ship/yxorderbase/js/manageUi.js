@@ -203,7 +203,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 			},
 			hsPage : true,
 			id : listid,
-			clicksToEdit : 1,
+			//clicksToEdit : 1,
 			tbar : [{
 						text : '生产计划录入',
 						scope : this,
@@ -299,26 +299,31 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 					}, {
 						dataIndex : 'orderNo',
 						width : 200,
-						header : '销售订单编号'
+						header : '销售订单编号',
+						sortable : true
 					}, {
 						dataIndex : 'specName',
 						header : '膜片生产型号'
 					}, {
 						dataIndex : 'orderTime',
 						width : 120,
-						header : '下单到生管时间'
+						header : '下单到生管时间',
+						sortable : true
 					}, {
 						dataIndex : 'dateDelivery',
 						width : 120,
-						header : '发货日期'
+						header : '发货日期',
+						sortable : true
 					}, {
 						dataIndex : 'orderDate',
 						width : 120,
-						header : '订单日期'
+						header : '订单日期',
+						sortable : true
 					}, {
 						dataIndex : 'demandDate',
 						width : 120,
-						header : '入库日期'
+						header : '入库日期',
+						sortable : true
 					}, {
 						dataIndex : 'amount',
 						width : 120,

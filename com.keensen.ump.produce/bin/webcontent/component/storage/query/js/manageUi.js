@@ -20,7 +20,7 @@ com.keensen.ump.produce.component.storage.QueryMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 170,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -93,6 +93,12 @@ com.keensen.ump.produce.component.storage.QueryMgr = function() {
 								name : 'condition/trayCode',
 								anchor : '100%',
 								fieldLabel : '托盘号 '
+							}, {
+								xtype : 'textfield',
+								colspan : 1,
+								name : 'condition/orderNoAllocate2',
+								anchor : '100%',
+								fieldLabel : '调拨后订单号%-%'
 							}
 
 							, {

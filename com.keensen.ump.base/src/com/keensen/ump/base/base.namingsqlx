@@ -393,6 +393,7 @@ t.mater_spec_name2 "materSpecName2"
 		t.staff_id "id", t.staff_name || '(' || t.staff_code || ')' "name"
 		 from qinsen.base_staff t
 		where t.dept_id in(100070,100457,100516,100515,100062,100066,100067,100069)
+		OR t.staff_id IN (100884,100885)
 		--and t.state = 'A'
 		order by t.staff_name
      </select>

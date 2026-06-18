@@ -528,7 +528,8 @@
   FROM KS_QUALITY_prod_DEFECT T1
 	where 1=1
 	
-	<isNotNull prepend="and" property="tache">T1.tache in ($tache$)</isNotNull>
+	<isNotNull prepend="and" property="tache2">T1.tache = #tache2#</isNotNull>
+        <isNotNull prepend="and" property="tache">T1.tache in ($tache$)</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>

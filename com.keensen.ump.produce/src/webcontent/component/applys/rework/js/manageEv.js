@@ -298,3 +298,8 @@ com.keensen.ump.produce.component.applys.reworkMgr.prototype.confirmBatchNo = fu
 		})
 	}
 }
+
+com.keensen.ump.produce.component.applys.reworkMgr.prototype.onDel = function() {
+	
+	this.listPanel.onDel();
+}

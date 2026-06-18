@@ -203,6 +203,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 			tbar : [{
 						text : '发起让步放行',
 						scope : this,
+						hidden:true,
 						iconCls : 'icon-application_add',
 						handler : this.onConcession
 					}, '-', {
