@@ -2153,6 +2153,13 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.doUploadDefect = function() {
 
 }
 
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.exportLiquidAdjust = function() {
+	
+	doQuerySqlAndExport(this, this.queryPanel4LiquidAdjustView, this.listPanel4LiquidAdjustView,
+			'工艺调整记录', 'com.keensen.ump.qinsen.tumo.queryLiquidAdjust');
+}
+
+
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);
 	return Math.round(number * factor) / factor;

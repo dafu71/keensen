@@ -573,8 +573,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								handler : this.onSendCheck
 							}, '->', '-', {
 								text : '膜片取样',
+								hidden:true,
 								scope : this,
-								hidden : gyyFlag != 1,
+								//hidden : gyyFlag != 1,
 								iconCls : 'icon-application_edit',
 								handler : this.onTakeSample
 							}, '->', '-', {
@@ -4684,7 +4685,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.queryPanel4LiquidAdjustView = this.queryPanel4LiquidAdjustView
 				|| new Ext.fn.QueryPanel({
-							height : 110,
+							height : 140,
 							columns : 3,
 							border : true,
 							region : 'north',
@@ -4742,8 +4743,25 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								name : 'condition/updateName',
 								anchor : '85%',
 								fieldLabel : '调整人%-%'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 3
+							}, {
+								xtype : 'textfield',
+								name : 'condition/item',
+								anchor : '85%',
+								fieldLabel : '调整项目%-%'
 							}]
 						})
+
+		this.queryPanel4LiquidAdjustView.addButton({
+			text : "导出",
+			hidden : uid != 'dafu' && uid != 'KS00880',
+			scope : this,
+			iconCls : 'icon-application_excel',
+			handler : this.exportLiquidAdjust
+		});
 
 		this.queryPanel4LiquidAdjustView.addButton({
 					text : "关闭",

@@ -227,6 +227,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						text : '新增',
 						scope : this,
 						iconCls : 'icon-application_add',
+						id : addBtn,
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',

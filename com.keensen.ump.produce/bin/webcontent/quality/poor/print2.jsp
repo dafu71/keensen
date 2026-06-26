@@ -129,20 +129,20 @@
   
   <td width="5%" height="38" rowspan=2><div align="center" class="style1">物料代码</div></td>
   <td width="6%" height="38" rowspan=2><div align="center" class="style1">元件型号</div></td>
-  <td width="2%" height="38" rowspan=2><div align="center" class="style1">胶带颜色</div></td>
+  <td width="3%" height="38" rowspan=2><div align="center" class="style1">胶带颜色</div></td>
   <td width="3%" height="38" rowspan=2><div align="center" class="style1">干/湿膜</div></td>
   <td width="7%" height="38" rowspan=2><div align="center" class="style1">卷膜序号/元件序列号</div></td>
   <td width="7%" height="38" rowspan=2><div align="center" class="style1">膜片批次</div></td>
-  <td width="3%" height="38" rowspan=2><div align="center" class="style1">气检值Kpa</div></td>
-  <td width="3%" height="38" rowspan=2><div align="center" class="style1">报废数量</div></td>
-  <td width="2%" height="38" rowspan=2><div align="center" class="style1">单位</div></td>
+  <td width="4%" height="38" rowspan=2><div align="center" class="style1">气检值Kpa</div></td>
+  <td width="4%" height="38" rowspan=2><div align="center" class="style1">报废数量</div></td>
+  <td width="3%" height="38" rowspan=2><div align="center" class="style1">单位</div></td>
   <td width="5%" height="38" rowspan=2><div align="center" class="style1">入库日期</div></td>
   <td width="5%" height="38" colspan=3><div align="center" class="style1">最后一次水测数据</div></td>
   <td width="7%" height="38" rowspan=2><div align="center" class="style1">报废原因</div></td>
   <td width="4%" height="38" rowspan=2><div align="center" class="style1">责任人</div></td>
   <td width="4%" height="38" rowspan=2><div align="center" class="style1">责任部门</div></td>
   <td width="6%" height="38" rowspan=2><div align="center" class="style1">处理方式</div></td>
-  <td width="4%" height="38" rowspan=2><div align="center" class="style1">品管员确认</div></td>
+  
   
   
   </tr>
@@ -164,22 +164,22 @@
   
     <td height="38" width="5%"> <div align="center" class="style1"><b:write iterateId="id1" property="materCode"/></div></td>
     <td height="38" width="6%"> <div align="center" class="style1"><b:write iterateId="id1" property="prodSpecName"/></div></td>
-    <td height="38" width="2%"> <div align="center" class="style1"><b:write iterateId="id1" property="tapeColor"/></div></td>
+    <td height="38" width="3%"> <div align="center" class="style1"><b:write iterateId="id1" property="tapeColor"/></div></td>
     <td height="38" width="3%"> <div align="center" class="style1"><b:write iterateId="id1" property="dryWet"/></div></td>
     <td height="38" width="7%"> <div align="center" class="style1"><b:write iterateId="id1" property="jmBatchNo"/></div></td>
     <td height="38" width="7%"> <div align="center" class="style1"><b:write iterateId="id1" property="tmBatchNo"/></div></td>
-    <td height="38" width="3%"> <div align="center" class="style1"><b:write iterateId="id1" property="checkResult"/></div></td>
-    <td height="38" width="3%"> <div align="center" class="style1"><b:write iterateId="id1" property="amount"/></div></td>
-    <td height="38" width="2%"> <div align="center" class="style1"><b:write iterateId="id1" property="unit"/></div></td>
+    <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="checkResult"/></div></td>
+    <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="amount"/></div></td>
+    <td height="38" width="3%"> <div align="center" class="style1"><b:write iterateId="id1" property="unit"/></div></td>
     <td height="38" width="5%"> <div align="center" class="style1"><b:write iterateId="id1" property="returnFactory"/></div></td>
-    <td height="38" width="7%"> <div align="center" class="style1"><b:write iterateId="id1" property="checkTm"/></div></td>
-    <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="gpd"/></div></td>
-    <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="salt"/></div></td>
+    <td height="38" width="7%"> <div align="center" class="style1"><b:write iterateId="id1" property="testDate"/></div></td>
+    <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="gpdResult"/></div></td>
+    <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="saltResult"/></div></td>
     <td height="38" width="7%"> <div align="center" class="style1"><b:write iterateId="id1" property="describe"/></div></td>
     <td height="38"  width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="responsible"/></div></td>
     <td height="38" width="4%"> <div align="center" class="style1"><b:write iterateId="id1" property="department"/></div></td>
     <td height="38" width="6%"> <div align="center" class="style1"><b:write iterateId="id1" property="dealMethod"/></div></td>
-    <td height="38" width="4%"> &nbsp;</td>
+    
   </tr>
   </l:iterate>
    

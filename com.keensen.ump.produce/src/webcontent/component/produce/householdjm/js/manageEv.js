@@ -1,6 +1,8 @@
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	Ext.getCmp(addBtn).setDisabled(true);
 
 	this.getRight();
 	
@@ -244,6 +246,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.exportProduce
 
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onStart = function() {
 	var _this = this;
+	
+	Ext.getCmp(addBtn).setDisabled(false);
+	
 	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
 			});
@@ -303,6 +308,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onEnd = funct
 					var ret = Ext.decode(resp.responseText);
 					if (ret.success) {
 						var msg = ret.msg;
+						
+						Ext.getCmp(addBtn).setDisabled(true);
+						
 						_this.queryPanel.setTitle("<span style='color:red'>"
 								+ msg + "</span>");
 					}

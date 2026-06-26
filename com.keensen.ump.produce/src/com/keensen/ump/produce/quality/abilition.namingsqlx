@@ -147,7 +147,12 @@ where 1=1
        ,poor.DEPARTMENT "department"
        ,poor.DEAL_METHOD "dealMethod"
        ,poor.RESPONSIBLE "responsible"
-       ,poor.DESCRIBE "describe"
+       ,poor.DESCRIBE "describe",
+       
+        to_char(poor.TEST_DATE,'YYYY-MM-DD') as "testDate",
+		poor.GPD_RESULT as "gpdResult",
+		poor.SALT_RESULT as "saltResult"
+       
        ,'/' "returnFactory"
        ,'/' "materCode"
        ,'支' "unit"
@@ -169,7 +174,10 @@ ON qj.juanmo_batch_id = jm.record_id
        T.RESPONSIBLE,
        T.DEPARTMENT,
        T.DEAL_METHOD,
-       T.DESCRIBE
+       T.DESCRIBE,
+       t.test_Date,
+       t.gpd_result,
+       t.salt_result
   FROM KS_PROD_QUALITY_POORRECORD T
  ORDER BY T.ID DESC) poor
  on poor.INVALID_CODE = t1.code and poor.JUANMO_BATCH_NO=t2.jm_batch_no

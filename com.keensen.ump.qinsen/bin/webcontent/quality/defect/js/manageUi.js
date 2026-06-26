@@ -271,31 +271,37 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 			hsPage : true,
 			tbar : [{
 						text : '涂膜录入涂膜不良',
+						hidden:true,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onAddTm
 					}, '-', {
 						text : '涂膜录入铸膜不良',
+						hidden:true,
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddZm
 					}, '-', {
 						text : '裁膜录入涂膜不良',
+						hidden:true,
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddTm2
 					}, '-', {
 						text : '裁膜录入铸膜不良',
+						hidden:true,
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddZm2
 					}, '-', {
 						text : '修改',
+						hidden:true,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
+						hidden:true,
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel

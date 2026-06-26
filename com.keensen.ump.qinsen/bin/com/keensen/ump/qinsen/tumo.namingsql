@@ -917,7 +917,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
     ON T1.SPEC_ID = PMS.MATER_SPEC_ID
  WHERE 1 = 1
  
- <isNotNull prepend="" property="idStr">AND t1.id in ($idStr$)</isNotNull>
+ <isNotNull prepend="" property="item">AND lower(t1.item) like '%' || lower(#item#) || '%'</isNotNull>
+        <isNotNull prepend="" property="idStr">AND t1.id in ($idStr$)</isNotNull>
         <isNotNull prepend="" property="adjustType">AND t1.adjust_type = #adjustType#</isNotNull>
         <isNotNull prepend="" property="adjustState">AND t1.adjust_state = #adjustState#</isNotNull>
         <isNotNull prepend="" property="lineId">AND T1.LINE_ID = #lineId#</isNotNull>

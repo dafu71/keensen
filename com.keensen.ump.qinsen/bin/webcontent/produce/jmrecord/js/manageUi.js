@@ -143,7 +143,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					//rescode : '10002661',
-					hidden: uid != 'dafu' && uid != 'KS00524' && uid != 'KS00307' && uid != 'KS01408' && uid != 'KS01147',
+					hidden: uid != 'dafu' && uid != 'KS00524' && uid != 'KS00307' && uid != 'KS01408' && uid != 'KS01147' && uid != 'KS01479',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel

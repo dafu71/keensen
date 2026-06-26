@@ -179,12 +179,15 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				// LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 
 				LODOP.ADD_PRINT_TEXT(25, 68, 96, 36, "膜片型号");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				// LODOP.SET_PRINT_STYLEA(0,"FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(37, 83, 96, 36, "Model");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(32, 115, 96, 36, ":");
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				
 
 				LODOP.ADD_PRINT_TEXT(29, 130, 115, 35, materSpecCode);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial");
@@ -192,8 +195,10 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 
 				LODOP.ADD_PRINT_TEXT(74, 90, 100, 35, "批号");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(86, 75, 100, 35, "Lot No");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(81, 115, 100, 35, ":");
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
@@ -204,8 +209,10 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 
 				LODOP.ADD_PRINT_TEXT(125, 48, 155, 35, "本卷长度(m)");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(135, 77, 155, 35, "Length");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(130, 115, 155, 35, ":");
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
@@ -217,8 +224,10 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 
 				LODOP.ADD_PRINT_TEXT(178, 48, 156, 35, "可用长度(m)");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(190, 18, 156, 35, "Available Length");
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(185, 115, 156, 35, ":");
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");

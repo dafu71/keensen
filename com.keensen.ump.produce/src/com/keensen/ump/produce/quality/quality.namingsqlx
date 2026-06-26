@@ -127,7 +127,12 @@
        T1.DEPARTMENT AS "department",T1.tap_color AS "tapColor",
        replace(T1.juanmo_Batch_No,'输入卷膜序号，单击旁边按钮','')  "juanmoBatchNo",
        T1.COMPONENT_TYPE AS "componentType",
-       T2.MATER_SPEC_NAME AS "materSpecName"
+       T2.MATER_SPEC_NAME AS "materSpecName",
+       
+       to_char(t1.TEST_DATE,'YYYY-MM-DD') as "testDate",
+		t1.GPD_RESULT as "gpdResult",
+		t1.SALT_RESULT as "saltResult"
+       
   FROM KS_PROD_QUALITY_POORRECORD T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC T2
     ON T1.MATER_SPEC_ID = T2.MATER_SPEC_ID

@@ -941,6 +941,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEnd = function() {
 														.decode(resp.responseText);
 												if (ret.success) {
 													var msg = ret.msg;
+													
+													Ext.getCmp(addBtn).setDisabled(true);
+													
 													_this.queryPanel
 															.setTitle("<span style='color:red'>"
 																	+ msg

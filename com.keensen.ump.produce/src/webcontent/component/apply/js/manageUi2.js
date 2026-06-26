@@ -1418,7 +1418,15 @@ com.keensen.ump.produce.component.applyMgr = function() {
 										_this.queryPanel3.ifprint.reset()
 									}
 								}
-							}]
+							}/*, {
+								// fieldLabel : '不显示需生产<br>或入库为零',
+								xtype : 'checkbox',
+								boxLabel : '包含返工单',
+								// checked : true,
+								name : 'condition/isRework',
+								inputValue : 'Y',
+								anchor : '100%'
+							}*/]
 				})
 
 		this.queryPanel3.addButton({

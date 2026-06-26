@@ -60,7 +60,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					// title : '【元件不良记录查询】',
+					// title : '【元件报废记录查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -207,7 +207,8 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : uid != 'dafu' && uid != 'KS00307' && uid != 'KS01408',
+					hidden : uid != 'dafu' && uid != 'KS00307'
+							&& uid != 'KS01408',
 					handler : this.exportExcel
 				});
 
@@ -216,11 +217,11 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					//singleSelect : true,
-					//header : ''
+				// singleSelect : true,
+				// header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			// title : '【元件不良记录列表】',
+			// title : '【元件报废记录列表】',
 			viewConfig : {
 				forceFit : false
 			},
@@ -240,12 +241,12 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
-					}, '-',{
-								text : '打印',
-								scope : this,
-								iconCls : 'icon-printer',
-								handler : this.onPrintBatch
-							}, '-', {
+					}, '-', {
+						text : '打印',
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onPrintBatch
+					}, '-', {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -309,6 +310,15 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						dataIndex : 'machine',
 						header : '卷制机台'
 					}, {
+						dataIndex : 'testDate',
+						header : '测试日期'
+					}, {
+						dataIndex : 'gpdResult',
+						header : '产水量'
+					}, {
+						dataIndex : 'saltResult',
+						header : '脱盐率'
+					}, {
 						dataIndex : 'tapColor',
 						header : '胶带颜色'
 					}, {
@@ -347,6 +357,12 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 			}	,
 				fields : [{
 							name : 'id'
+						}, {
+							name : 'testDate'
+						}, {
+							name : 'gpdResult'
+						}, {
+							name : 'saltResult'
 						}, {
 							name : 'createTime'
 						}, {
@@ -422,7 +438,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
-			title : '新增元件不良记录',
+			title : '新增元件报废记录',
 			height : 600,
 			width : 800,
 			// itemCls:'required',
@@ -631,6 +647,35 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					colspan : 1
 				}, {
 					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'numberfield',
+					allowBlank : true,
+					name : 'entity/gpdResult',
+					fieldLabel : '产水量(GPD)',
+					anchor : '75%',
+					colspan : 1
+				}, {
+					xtype : 'numberfield',
+					allowBlank : true,
+					name : 'entity/saltResult',
+					fieldLabel : '脱盐率(%)',
+					anchor : '75%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'datefield',
+					name : 'entity/testDate',
+					fieldLabel : '测试日期',
+					anchor : '75%',
+					format : "Y-m-d",
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
 					fieldLabel : ' ',
 					value : '<p style="color:red;">选择元件型号,及输入不合格数量，点击旁边按钮获取不合格膜片长度</p>',
 					labelSeparator : '',// 去掉冒号
@@ -691,7 +736,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 	this.initEditWindow = function() {
 		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
-			title : '修改元件不良记录',
+			title : '修改元件报废记录',
 			height : 600,
 			width : 800,
 			resizable : false,
@@ -908,6 +953,38 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					dataIndex : 'tapColor',
 					fieldLabel : '胶带颜色',
 					anchor : '75%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'numberfield',
+					allowBlank : true,
+					name : 'entity/gpdResult',
+					dataIndex : 'gpdResult',
+					fieldLabel : '产水量(GPD)',
+					anchor : '75%',
+					colspan : 1
+				}, {
+					xtype : 'numberfield',
+					allowBlank : true,
+					name : 'entity/saltResult',
+					dataIndex : 'saltResult',
+					fieldLabel : '脱盐率(%)',
+					anchor : '75%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'datefield',
+					name : 'entity/testDate',
+					dataIndex : 'testDate',
+					fieldLabel : '测试日期',
+					anchor : '75%',
+					format : "Y-m-d",
 					colspan : 1
 				}, {
 					xtype : 'displayfield',

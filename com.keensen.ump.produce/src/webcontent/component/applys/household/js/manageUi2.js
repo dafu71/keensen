@@ -216,7 +216,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						handler : this.onPrint
 					}, '-', {
 						text : '请检拍照',
-						hidden : uid != 'dafu',
+						//hidden : uid != 'dafu',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onViewPhotos

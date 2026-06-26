@@ -360,7 +360,7 @@ function initPage() {
 		         var color = 'black';
 		            
 		         // 设置样式
-		         nsfElement.style.left = '225px';
+		         nsfElement.style.left = '215px';//225px
 		         nsfElement.style.top = '240px';
 		         nsfElement.style.fontSize = fontSize;
 		         //nsfElement.style.fontWeight = 'bold';

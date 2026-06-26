@@ -33,8 +33,8 @@
     int modifyOrderNoFlag4Wet = 0;
     int modifyOrderNoFlag4Dry = 0;
     if(modifyOrderNoFlag==1){
-    	//气检湿膜贴标,梁彪、李长林、袁娜
-    	if(uid.equals("KS00141")||uid.equals("KS00524") ||uid.equals("KS01479")){
+    	//气检湿膜贴标,任栋、梁彪、李长林、袁娜
+    	if(uid.equals("KS00307") || uid.equals("KS00141")||uid.equals("KS00524") ||uid.equals("KS01479")){
     		modifyOrderNoFlag4Wet = 1;
     	}
     	//气检干膜贴标,任栋、吴敏、袁娜

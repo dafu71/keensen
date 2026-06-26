@@ -14,8 +14,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link11</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="839" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -234,7 +234,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">&lt;a href='http://172.16.1.253:8090/default/com.keensen.ump.produce.diaphragm.storage.queryMpStock.flow' target='_blank'>膜片库存预警，请立即处理&lt;/a></process:from>
+      <process:from type="literal" pattern="reference">&lt;a href='http://172.16.1.249:8090/default/com.keensen.ump.produce.diaphragm.storage.queryMpStock.flow' target='_blank'>膜片库存预警，请立即处理&lt;/a></process:from>
       <process:to type="query">notice/content</process:to>
     </process:copy>
     <process:copy>

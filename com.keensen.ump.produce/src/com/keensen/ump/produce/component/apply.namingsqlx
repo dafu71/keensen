@@ -565,6 +565,161 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
        m.mater_spec_name "prodSpecName",
        j.tumo_batch_str "tumoBatchStr",
        T1.diameter "diameter",T1.diameter2 "diameter2"
+  FROM (select t1.* from QINSEN.INST_QIJIAN T1
+	LEFT JOIN  V_KS_NOT_VALID_BATCH_NO v
+	ON T1.batch_no = v.batch_no
+	  where 1=1
+	  <isNotNull prepend="and" property="orderNo"> 
+		       t1.order_no = #orderNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="prodSpecId"> 
+		       t1.PROD_SPEC_ID in($prodSpecId$)
+	</isNotNull>
+	
+	   and T1.BATCH_NO is not NULL  	   
+	    AND v.batch_no IS NULL) T1
+  
+  <!--
+  left join 
+  (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
+	(
+	SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) t1  
+	   LEFT JOIN V_KS_QJ_BATCH_NO v
+	  on v.batch_no = t1.batch_no) rec
+  on rec.qj_batch_no =t1.batch_no
+  -->
+  left join (SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) rec
+  on rec.batch_no =t1.batch_no
+  
+  LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
+          from qinsen.inst_juanmo_detail dd,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where dd.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           GROUP BY dd.main_batch_id) j ON t1.juanmo_batch_id=j.record_id
+  LEFT JOIN qinsen.para_mater_spec m ON m.mater_spec_id = T1.PROD_SPEC_ID
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) T3
+    ON T3.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+   
+  left join (select t.batch_no,max(t.code) fcode from KS_COMPONENT_REWORK_LIST t
+	GROUP BY t.batch_no) t5
+	on t5.batch_no = T1.BATCH_NO
+  where 1=1
+    and T1.BATCH_NO is not null  
+    
+    <!--元件已完成绕丝-->
+    <!--and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO)-->
+	  
+	  
+	<!--  
+	  and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+   on rs.juanmo_batch_id = qj.juanmo_batch_id   
+  left join V_KS_QJ_BATCH_NO_raosi v
+	  on rs.batch_no = v.batch_no
+    where qj.batch_no = T1.BATCH_NO)
+    -->
+    
+     and exists(SELECT qj.batch_no from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO
+	  UNION
+	  SELECT RS.batch_no from qinsen.inst_raosi rs 
+	  WHERE rs.juanmo_batch_id is null and rs.batch_no = T1.BATCH_NO
+	  ) 
+    
+    
+    
+    
+    
+    <isEqual prepend="" property="ifprint" compareValue="是">
+    <!--元件已打印唛头-->
+    and exists(SELECT 1 from KS_COMPONENT_MARK_PRINT_RECORD prnt where prnt.prod_batch_no = T1.BATCH_NO)
+    </isEqual>
+    
+    <isEqual prepend="" property="ifprint" compareValue="否">
+    <!--元件未打印唛头-->
+    and not exists(SELECT 1 from KS_COMPONENT_MARK_PRINT_RECORD prnt where prnt.prod_batch_no = T1.BATCH_NO)
+    </isEqual>
+    
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_No = #batchNo#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSpecName"> 
+		       m.mater_spec_name in($prodSpecName$)
+	</isNotNull>
+		
+	
+	 <isNotNull prepend = "and"  property = "produceDtStart"> 
+          to_char(T1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "produceDtEnd"> 
+          to_char(T1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#
+     </isNotNull>
+	union all
+	SELECT 
+		'无' "isqj",
+		T1.qj_BATCH_NO AS "batchNo",null "fcode",
+       T1.JUANMO_BATCH_ID AS "juanmoBatchId",T1.qijian "checkResult",
+       od.ORDER_NO AS "orderNo",
+       od.mater_SPEC_ID AS "prodSpecId",     
+     
+       t1.dry_wet AS "state",
+       substr(T1.CREATE_TIME, 1,10) "produceDt",
+       od.mater_spec_name "prodSpecName",
+       null "tumoBatchStr",
+       null "diameter",null "diameter2"
+	  FROM (select * from V_KS_COMPONENT_PROD_RECORD t
+	WHERE T.isqj != 1 and t.order_id = #orderId#) T1
+	left join KS_PROD_COMPONENT_YXORDER od
+	on od.id = t1.order_id
+	where 1=1 and not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.qj_BATCH_NO)
+	
+	
+	
+	
+    </select>
+    
+    <select id="queryCode4DeliveryConfirm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       select t.code "code",
+		DECODE(t.delivery_confirm_time,NULL,'0','1') "state" ,
+		t.id "id"
+		from KS_COMPONENT_CHECK_HEAD t
+		where
+		t.code = #code#
+   </select>
+   
+   <select id="queryComponentMix_bak" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT '有' "isqj",
+   		T1.BATCH_NO AS "batchNo",t5.fcode "fcode",
+       T1.JUANMO_BATCH_ID AS "juanmoBatchId", 
+       to_char(T1.CHECK_RESULT) "checkResult",
+       T1.ORDER_NO AS "orderNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       
+      <!-- DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿') AS "state",-->
+       
+       nvl(rec.dry_wet,DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿')) AS "state",
+       to_char(T1.PRODUCE_DT,'yyyy-MM-dd') "produceDt",
+       m.mater_spec_name "prodSpecName",
+       j.tumo_batch_str "tumoBatchStr",
+       T1.diameter "diameter",T1.diameter2 "diameter2"
   FROM QINSEN.INST_QIJIAN T1
   
   <!--
@@ -610,9 +765,19 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	on t5.batch_no = T1.BATCH_NO
   where 1=1
     and T1.BATCH_NO is not null
+    
+    
     and (not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
+    
+    <isNotNull prepend="" property="isRework">
     <!--元件做了返工单，可以重复发起请检-->
-    or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO))
+    or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
+    
+    </isNotNull>
+    )
+    
+    
+    
     
     <!--元件已完成绕丝-->
     <!--and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
@@ -690,13 +855,4 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	
 	
     </select>
-    
-    <select id="queryCode4DeliveryConfirm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-       select t.code "code",
-		DECODE(t.delivery_confirm_time,NULL,'0','1') "state" ,
-		t.id "id"
-		from KS_COMPONENT_CHECK_HEAD t
-		where
-		t.code = #code#
-   </select>
     </sqlMap>

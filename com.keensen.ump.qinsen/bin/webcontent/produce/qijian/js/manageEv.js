@@ -1187,7 +1187,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onSaveAbilition = function() 
 		Ext.each(records, function(r) {
 
 					var checkTm = r.data['checkTm'];
-					checkTm = checkTm.length < 5 ? null : checkTm;
+					checkTm = Ext.isEmpty(checkTm)?null : checkTm.length < 5 ? null : checkTm;
 					var d = {
 						'jmBatchNo' : r.data['jmBatchNo'],
 						'tmBatchNo' : r.data['tmBatchNo'],

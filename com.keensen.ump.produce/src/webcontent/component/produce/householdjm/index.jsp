@@ -94,6 +94,8 @@ var opt = '';
   
   var ip = '<%=ip %>';
   
+  var addBtn = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.produce.HouseholdJmMgr
 		});
